@@ -1,0 +1,313 @@
+{******************************************************************************}
+{*                                                                            *}
+{*             NTFS´ÅÅÌ»Ö¸´¹¤¾ß  À¶ÍøÊý¾Ý»Ö¸´ÖÐÐÄ     18112338818                    *}
+{*                                                                            *}
+{******************************************************************************}
+
+unit uRecoverThread;
+
+interface
+
+uses
+  Classes,Windows,SysUtils,uNTFS;
+
+type
+  TRecoverThread = class(TThread)
+  private
+    { Private declarations }
+    FdiskInfo  : TDISK_INFORMATION;
+    FFileCount : integer;
+    FCurDrive  : string;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(suspended: boolean; curDrive: string; FileCount: integer; diskInfo: TDISK_INFORMATION);
+  end;
+
+implementation
+
+uses uMain;
+
+procedure RecoverFile(curDrive: string; FMTLocation : string; diskInfo: TDISK_INFORMATION; SaveFilePath : string);
+var
+  RecordLocator: Int64;
+  hDevice, hDest : THandle;
+  MFTFileRecord: TDynamicCharArray;
+  StandardInformationAttributeData: TDynamicCharArray;
+  FileNameAttributeData: TDynamicCharArray;
+  DataAttributeHeader: TDynamicCharArray;
+  ResidentDataAttributeData: TDynamicCharArray;
+  NonResidentDataAttributeData: TDynamicCharArray;
+  pFileRecord: ^TFILE_RECORD;
+  pStandardInformationAttribute : ^TSTANDARD_INFORMATION;
+  pFileNameAttribute : ^TFILENAME_ATTRIBUTE;
+  pDataAttributeHeader : ^TRECORD_ATTRIBUTE;
+  pResidentDataAttribute : ^TRESIDENT_ATTRIBUTE;
+  pNonResidentDataAttribute : ^TNONRESIDENT_ATTRIBUTE;
+
+  dwread: LongWord;
+  dwwritten: LongWord;
+
+  FileName: WideString;
+  FileCreationTime, FileChangeTime: TDateTime;
+  NonResidentFlag : boolean;
+
+  DataAttributeSize: DWord;
+
+  NonRes_OffsetToDataRuns: Word;
+  NonRes_DataSize: Int64;
+  NonRes_DataRuns: TDynamicCharArray;
+  NonRes_DataRunsIndex: integer;
+  NonRes_DataOffset: Int64;
+  NonRes_DataOffset_inBytes: Int64;
+  NonRes_CurrentLength: Int64;
+  NonRes_CurrentOffset: Int64;
+  NonRes_CurrentLengthSize: Byte;
+  NonRes_CurrentOffsetSize: Byte;
+  NonRes_CurrentData: TDynamicCharArray;
+  NonRes_PreviousFileDataLength: Int64;
+
+  Res_OffsetToData: Word;
+  Res_DataSize: Int64;
+
+  FileData: TDynamicCharArray;
+  FileType: string;
+
+  i : integer;
+  i64 : Int64;
+  tmpStr : string;
+begin
+
+  tmpStr := FMTLocation;
+  delete(tmpStr,1,2);
+  RecordLocator := StrToInt64('$'+ tmpStr);
+
+  hDevice := CreateFile( PChar('\\.\'+curDrive), GENERIC_READ, FILE_SHARE_READ or FILE_SHARE_WRITE,
+                         nil, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+  if (hDevice = INVALID_HANDLE_VALUE) then
+  begin
+    Closehandle(hDevice);
+    exit;
+  end;
+  SetFilePointer(hDevice, 0, nil, FILE_BEGIN);
+  SetLength(MFTFileRecord,diskInfo.BytesPerFileRecord);
+  SetFilePointer(hDevice, Int64Rec(RecordLocator).Lo, @Int64Rec(RecordLocator).Hi, FILE_BEGIN);
+  Readfile(hDevice, PChar(MFTFileRecord)^, diskInfo.BytesPerFileRecord, dwread, nil);
+  if not FixupUpdateSequence(MFTFileRecord,diskInfo) then
+  begin
+    closehandle(hDevice);
+    exit;
+  end;
+  New(pFileRecord);
+  ZeroMemory(pFileRecord, SizeOf(TFILE_RECORD));
+  CopyMemory(pFileRecord, MFTFileRecord, SizeOf(TFILE_RECORD));
+  if pFileRecord^.Flags<>0 then
+  begin
+    Dispose(pFileRecord);
+    Closehandle(hDevice);
+    exit;
+  end;
+  StandardInformationAttributeData := FindAttributeByType(MFTFileRecord, AttributeStandardInformation);
+  if StandardInformationAttributeData<>nil then
+  begin
+    New(pStandardInformationAttribute);
+    ZeroMemory(pStandardInformationAttribute, SizeOf(TSTANDARD_INFORMATION));
+    CopyMemory(pStandardInformationAttribute, StandardInformationAttributeData,
+               SizeOf(TSTANDARD_INFORMATION));
+    Dispose(pStandardInformationAttribute);
+  end
+  else
+  begin
+    FileCreationTime := now;
+    FileChangeTime := now;
+  end;
+  FileNameAttributeData := FindAttributeByType(MFTFileRecord, AttributeFileName, true);
+  if FileNameAttributeData<>nil then
+  begin
+    New(pFileNameAttribute);
+    ZeroMemory(pFileNameAttribute, SizeOf(TFILENAME_ATTRIBUTE));
+    CopyMemory(pFileNameAttribute, FileNameAttributeData, SizeOf(TFILENAME_ATTRIBUTE));
+    FileName := WideString(Copy(FileNameAttributeData, $5A, pFileNameAttribute^.NameLength*2));
+    Dispose(pFileNameAttribute);
+  end
+  else
+  begin
+    FileName := 'UntitledFile';
+  end;
+  DataAttributeHeader := FindAttributeByType(MFTFileRecord, AttributeData);
+  if DataAttributeHeader<>nil then
+  begin
+    New(pDataAttributeHeader);
+    ZeroMemory(pDataAttributeHeader, SizeOf(TRECORD_ATTRIBUTE));
+    CopyMemory(pDataAttributeHeader, DataAttributeHeader, SizeOf(TRECORD_ATTRIBUTE));
+          NonResidentFlag := pDataAttributeHeader^.NonResident=1;
+          DataAttributeSize := pDataAttributeHeader^.Length;
+    Dispose(pDataAttributeHeader);
+  end
+  else
+  begin
+    Dispose(pFileRecord);
+    Closehandle(hDevice);
+    exit;
+  end;
+  if NonResidentFlag then
+  begin
+    NonResidentDataAttributeData := FindAttributeByType(MFTFileRecord, AttributeData);
+    if NonResidentDataAttributeData<>nil then
+    begin
+      New(pNonResidentDataAttribute);
+      ZeroMemory(pNonResidentDataAttribute, SizeOf(TNONRESIDENT_ATTRIBUTE));
+      CopyMemory(pNonResidentDataAttribute,NonResidentDataAttributeData, SizeOf(TNONRESIDENT_ATTRIBUTE));
+            NonRes_OffsetToDataRuns := pNonResidentDataAttribute^.RunArrayOffset;
+            NonRes_DataSize := pNonResidentDataAttribute^.DataSize;
+      Dispose(pNonResidentDataAttribute);
+      SetLength(NonRes_DataRuns, DataAttributeSize-(NonRes_OffsetToDataRuns-1));
+      NonRes_DataRuns := Copy(NonResidentDataAttributeData,NonRes_OffsetToDataRuns,
+                              DataAttributeSize-(NonRes_OffsetToDataRuns-1));
+    end
+    else
+    begin
+      Dispose(pFileRecord);
+      Closehandle(hDevice);
+      exit;
+    end;
+    try
+      SetLength(FileData, 0);
+      NonRes_DataRunsIndex := 0;
+      NonRes_DataOffset := 0;
+
+      while NonRes_DataRuns[NonRes_DataRunsIndex] <> Char($00)  do
+      begin
+
+        NonRes_CurrentLengthSize := Ord(NonRes_DataRuns[NonRes_DataRunsIndex]) and $F;
+        NonRes_CurrentOffsetSize := (Ord(NonRes_DataRuns[NonRes_DataRunsIndex]) shr 4) and $F;
+        NonRes_CurrentLength := 0;
+        NonRes_CurrentOffset := 0;
+        for i := NonRes_CurrentLengthSize-1 downto 0 do
+            NonRes_CurrentLength := (Ord(NonRes_CurrentLength) shl 8)
+                                    + Ord(NonRes_DataRuns[1+i+NonRes_DataRunsIndex]);
+        for i := NonRes_CurrentLengthSize+NonRes_CurrentOffsetSize-1 downto NonRes_CurrentLengthSize do
+            NonRes_CurrentOffset := (Ord(NonRes_CurrentOffset) shl 8)
+                                    + Ord(NonRes_DataRuns[1+i+NonRes_DataRunsIndex]);
+        if (NonRes_CurrentOffset > ($80 shl ((8*NonRes_CurrentOffsetSize)-1)))
+           and (NonRes_DataRunsIndex<>0) then
+          NonRes_DataOffset := NonRes_DataOffset
+                               - ( ($100 shl ((8*NonRes_CurrentOffsetSize)-1) ) - NonRes_CurrentOffset)
+        else
+          NonRes_DataOffset := NonRes_DataOffset + NonRes_CurrentOffset;
+        SetLength(NonRes_CurrentData, NonRes_CurrentLength * diskInfo.BytesPerCluster);
+        NonRes_DataOffset_inBytes := NonRes_DataOffset * diskInfo.BytesPerCluster;
+        SetFilePointer(hDevice, Int64Rec(NonRes_DataOffset_inBytes).Lo,
+                       @Int64Rec(NonRes_DataOffset_inBytes).Hi, FILE_BEGIN);
+        Readfile(hDevice, PChar(NonRes_CurrentData)^, NonRes_CurrentLength * diskInfo.BytesPerCluster, dwread, nil);
+        NonRes_PreviousFileDataLength := Length(FileData);
+        SetLength(FileData, NonRes_PreviousFileDataLength + (NonRes_CurrentLength * diskInfo.BytesPerCluster));
+
+        if NonRes_CurrentOffset=0 then
+        begin 
+          i64 := NonRes_PreviousFileDataLength;
+          while i64 <= Length(FileData)-1 do
+          begin
+            FileData[i64] := Char($00);
+            inc(i64);
+          end;
+        end
+        else
+        begin
+          i64 := NonRes_PreviousFileDataLength;
+          while i64 <= Length(FileData)-1 do begin
+            FileData[i64] := NonRes_CurrentData[i64-NonRes_PreviousFileDataLength];
+            inc(i64);
+          end;
+        end;
+        NonRes_DataRunsIndex := NonRes_DataRunsIndex+NonRes_CurrentLengthSize+NonRes_CurrentOffsetSize+1;
+      end;
+      SetLength(FileData, NonRes_DataSize);
+    except
+      Dispose(pFileRecord);
+      Closehandle(hDevice);
+      exit;
+    end;
+  end
+  else
+  begin
+    ResidentDataAttributeData := FindAttributeByType(MFTFileRecord, AttributeData);
+    if ResidentDataAttributeData<>nil then
+    begin
+      New(pResidentDataAttribute);
+      ZeroMemory(pResidentDataAttribute, SizeOf(TRESIDENT_ATTRIBUTE));
+      CopyMemory(pResidentDataAttribute, ResidentDataAttributeData, SizeOf(TRESIDENT_ATTRIBUTE));
+            Res_OffsetToData := pResidentDataAttribute^.ValueOffset;
+            Res_DataSize := pResidentDataAttribute^.ValueLength;
+      Dispose(pResidentDataAttribute);
+            SetLength(FileData, Res_DataSize);
+            FileData := Copy(ResidentDataAttributeData,Res_OffsetToData,Res_DataSize);
+    end
+    else
+    begin
+      Dispose(pFileRecord);
+      Closehandle(hDevice);
+      exit;
+    end;
+
+  end;
+
+  hDest:= CreateFile(PChar(SaveFilePath), GENERIC_WRITE, 0, nil, CREATE_ALWAYS,
+                   FILE_ATTRIBUTE_NORMAL, 0);
+  WriteFile(hDest, PChar(FileData)^, Length(FileData), dwwritten, nil);
+  Closehandle(hDest);
+  Dispose(pFileRecord);
+  Closehandle(hDevice);
+
+end;
+
+constructor TRecoverThread.Create(suspended: Boolean; curDrive: string; FileCount: Integer; diskInfo: TDISK_INFORMATION);
+begin
+  inherited Create(suspended);
+  FcurDrive := curDrive;
+  FFileCount := FileCount;
+  FDiskInfo.BytesPerFileRecord := diskInfo.BytesPerFileRecord;
+  FDiskInfo.BytesPerCluster    := diskInfo.BytesPerCluster;
+  FDiskInfo.BytesPerSector     := diskInfo.BytesPerSector;
+  FDiskInfo.SectorsPerCluster  := diskInfo.SectorsPerCluster;
+end;
+
+procedure TRecoverThread.Execute;
+var
+  i : integer;
+begin
+  { Place thread code here }
+  isRecovering := true;
+  with MainForm do
+  begin
+    PB.Max := FFileCount;
+    PB.Min := 0;
+    PB.Position := 0;
+    btnRecover.Caption := 'Í£Ö¹»Ö¸´';
+    btnScan.Enabled := false;
+    for i := 0 to ListView1.Items.Count - 1 do
+    begin
+      if StopRecover then
+      begin
+        break;
+      end;
+      if listview1.Items[i].Checked then
+      begin
+        if rb1.Checked then
+        begin
+          RecoverFile(FcurDrive, listview1.Items[i].Caption, FDiskInfo, DLB.Directory + '\' +listview1.Items[i].SubItems[0]);
+        end
+        else
+        begin
+          RecoverFile(FcurDrive, listview1.Items[i].Caption, FDiskInfo, DLB.Directory + '\File_' + inttostr(i));
+        end;
+        PB.Position := PB.Position + 1;
+      end;
+    end;
+    isRecovering := false;
+    btnRecover.Caption := '»Ö¸´ÎÄ¼þ';
+    btnScan.Enabled := true;
+  end;
+end;
+
+end.

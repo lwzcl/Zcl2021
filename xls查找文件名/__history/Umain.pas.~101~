@@ -1,0 +1,305 @@
+unit Umain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, Vcl.OleAuto, Vcl.FileCtrl, Vcl.Themes, StrUtils, Vcl.ExtCtrls,
+  Vcl.ComCtrls, XLSSheetData5, XLSReadWriteII5, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
+  dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinOffice2019Colorful, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinTheBezier, dxSkinsDefaultPainters, dxSkinValentine,
+  dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxProgressBar, Vcl.Menus, Vcl.Tabs, XLSGrid5, Vcl.Grids,
+  cxClasses, dxSkinsForm, System.Actions, Vcl.ActnList;
+
+type
+  Tmain = class(TForm)
+    Button1: TButton;
+    Edit1: TEdit;
+    Panel1: TPanel;
+    XLSRW_tmp: TXLSReadWriteII5;
+    cxProgressBar1: TcxProgressBar;
+    Panel2: TPanel;
+    StatusBar1: TStatusBar;
+    MainMenu1: TMainMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    ComboBox1: TComboBox;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    PopupMenu1: TPopupMenu;
+    N9: TMenuItem;
+    Check_name: TCheckBox;
+    TabSheet2: TTabSheet;
+    XLSGrid1: TXLSGrid;
+    execl1: TMenuItem;
+    Panel3: TPanel;
+    but_openfile: TButton;
+    ListView1: TListView;
+    dxSkinController1: TdxSkinController;
+    Button2: TButton;
+    ActionList1: TActionList;
+    act_openfiles: TAction;
+    act_mystart: TAction;
+    act_homt: TAction;
+    act_stop: TAction;
+    Button3: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure ListView1AdvancedCustomDrawItem(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+    procedure N9Click(Sender: TObject);
+    procedure execl1Click(Sender: TObject);
+    procedure ListView1Data(Sender: TObject; Item: TListItem);
+    procedure act_openfilesExecute(Sender: TObject);
+    procedure act_mystartExecute(Sender: TObject);
+    procedure act_homtExecute(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Find_DateUpp();
+    procedure Button3Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+
+    { Public declarations }
+    function scan_data(scanstring: string): Boolean;
+    function myopenfile(filepath: string): Boolean;
+    function SearchList(findkey: string; FList: TList): Integer;
+  end;
+
+  PShellItem = ^TShellItem;
+
+  TShellItem = record
+    ID: Integer;
+    UserName: string;
+    TypeName: string;
+  end;
+
+var
+  main: Tmain;
+  FIDList: TList;
+
+
+implementation
+
+{$R *.dfm}
+uses
+  UMyThread, Winapi.ShellAPI, Generics.Defaults, Math;
+
+var
+  mywork: MyThread;
+{ Tmain }
+
+procedure Tmain.act_homtExecute(Sender: TObject);
+begin
+  ShellExecute(Application.Handle, nil, pchar('http://www.jssjhf.com/'), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure Tmain.act_mystartExecute(Sender: TObject);
+begin
+
+  try
+    PageControl1.ActivePageIndex := 0;
+    mywork.Start;
+  except
+    on E: Exception do
+      mywork.FreeOnTerminate := True;
+  end;
+
+end;
+
+procedure Tmain.act_openfilesExecute(Sender: TObject);
+var
+  strCaption, strDirectory: string;
+  wstrRoot: WideString;
+begin
+  strCaption := '这是浏览文件夹的说明文字，可以根据需要进行书写。';
+
+    //该参数是浏览文件夹窗口的显示说明部分
+  wstrRoot := '';
+    //这个参数表示所显示的浏览文件夹窗口中的根目录，默认或空表示“我的电脑”。
+  SelectDirectory(strCaption, wstrRoot, strDirectory);
+  StatusBar1.Panels[2].Text := strDirectory;
+  Edit1.Text := strDirectory;
+
+end;
+
+procedure Tmain.Button3Click(Sender: TObject);
+begin
+
+//    FIDList.Filtered := False;
+    if Edit1.Text <> '' then
+    begin
+      //SearchList(Edit1.Text,FIDList)
+      TThread.CreateAnonymousThread(Find_DateUpp).Start;
+    end;
+//    ListView1.Items.Count := FIDList.Count;
+
+end;
+
+procedure Tmain.execl1Click(Sender: TObject);
+var
+  tmp: string;
+begin
+  if ListView1.Selected.Index <= 0 then
+    Exit;
+  tmp := ListView1.Items.Item[ListView1.Selected.Index].SubItems.Strings[1];
+  if not myopenfile(tmp) then
+  begin
+    ShowMessage('打开失败！');
+  end;
+end;
+
+procedure Tmain.Find_DateUpp;
+begin
+   SearchList(Edit1.Text,FIDList);
+
+
+end;
+
+procedure Tmain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  FIDList.Clear;
+  FIDList.Free;
+
+end;
+
+procedure Tmain.FormCreate(Sender: TObject);
+begin
+  StatusBar1.Panels[0].Text := '常州蓝网数据恢复中心';
+  StatusBar1.Panels[2].Text := '联系电话：0519-85808818  手机：18112338818  微信号是手机号  网站 ：www.jssjhf.com';
+  FIDList := TList.Create;
+  mywork := MyThread.Create(True);
+end;
+
+procedure Tmain.ListView1AdvancedCustomDrawItem(Sender: TCustomListView; Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+var
+  i: Integer;
+begin
+
+  i := (Sender as TListView).Items.IndexOf(Item);
+                                                 //clGradientActiveCaption
+  if odd(i) then
+    Sender.Canvas.Brush.Color := clGradientActiveCaption
+  else
+    Sender.Canvas.Brush.Color := clGradientInactiveCaption;
+
+  Sender.Canvas.FillRect(Item.DisplayRect(drIcon));
+
+end;
+
+procedure Tmain.ListView1Data(Sender: TObject; Item: TListItem);
+
+begin
+
+  with PShellItem(FIDList[Item.Index])^ do   //按结构体显示ListView
+  begin
+    Item.Caption := IntToStr(ID);
+    Item.SubItems.Add(UserName);
+    Item.SubItems.Add(TypeName);
+  end;
+//  with PShellItem(FINDList[Item.Index])^ do   //按结构体显示ListView
+//  begin
+//    Item.Caption := IntToStr(ID);
+//    Item.SubItems.Add(UserName);
+//    Item.SubItems.Add(TypeName);
+//  end;
+end;
+
+function Tmain.myopenfile(filepath: string): Boolean;
+var
+  ExcelApp: Variant;
+begin
+  try
+    ExcelApp := CreateOleObject('Excel.Application');
+    ExcelApp.Visible := True;
+    ExcelApp.WorkBooks.Open(filepath);
+    Result := True;
+
+  except
+    Result := False;
+
+  end;
+
+end;
+
+procedure Tmain.N9Click(Sender: TObject);
+var
+  tmp: string;
+begin
+//    //ListView1.Items.Item[行号].SubItems.Strings[列号] 第二至N列
+//    //ShowMessage(IntToStr( ListView1.Selected.Index)) ;
+  if ListView1.Selected.Index <= 0 then
+    Exit;
+  tmp := ListView1.Items.Item[ListView1.Selected.Index].SubItems.Strings[1];
+//  if not myopenfile(tmp) then
+//  begin
+//    ShowMessage('打开失败！');
+//  end;
+  XLSGrid1.XLS.Clear();
+  XLSGrid1.XLS.Filename := tmp;
+  XLSGrid1.XLS.Read;
+  PageControl1.ActivePageIndex := 1;
+
+end;
+
+function Tmain.scan_data(scanstring: string): Boolean;
+var
+  I: Integer;
+begin
+  for I := 0 to ListView1.Items.Count - 1 do
+  begin
+    if ListView1.Items[I].SubItems.Strings[1] = scanstring then
+    begin
+      ShowMessage('OK');
+    end;
+
+  end;
+
+end;
+
+function Tmain.SearchList(findkey: string; FList: TList): Integer;
+var
+  findstr: string;
+  I: Integer;
+  shell: PShellItem;
+begin
+  for I := 0 to FList.Count - 1 do
+  begin
+    if FList.Count <= 0 then
+      Exit;
+    shell := New(PShellItem);
+    shell := FIDList[I];
+    if  pos(shell.UserName,findkey)<>0 then
+    begin
+        with ListView1.items.add do
+          begin
+            caption := shell.ID;
+            subitems.add(shell.UserName);
+            subitems.add(shell.TypeName);
+          end;
+    end;
+  end;
+
+end;
+
+end.
+

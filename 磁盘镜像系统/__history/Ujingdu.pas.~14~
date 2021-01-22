@@ -1,0 +1,19 @@
+unit Ujingdu;
+
+interface
+
+uses
+  System.Classes, Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, Winapi.ShellAPI, Vcl.Dialogs;
+
+type
+  Tjd = class(TThread)
+  private
+    { Private declarations }
+    jindu: PLONG64;
+    state: Boolean;
+  protected
+    procedure Execute; override;
+  public
+
+  end.

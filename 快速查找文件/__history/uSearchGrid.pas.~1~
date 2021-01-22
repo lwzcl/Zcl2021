@@ -1,0 +1,332 @@
+unit uSearchGrid;
+
+interface
+
+uses
+  Vcl.Grids, Data.DB, Vcl.Menus,  System.Types, System.Classes, Vcl.ImgList,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, System.UITypes,
+  FireDAC.DatS, FireDAC.Comp.Client, Vcl.Graphics, Winapi.ShellAPI;
+
+type
+  //拖选
+  TDragSel=(dsNone, dsHorz, dsVert);
+
+  TDataGrid = class(TCustomGrid)
+  private
+    FClearSel: TGridRect;
+    FMem: TFDMemTable;//数据集
+//    PM: TPopupMenu;    //右键主菜单
+//    PmCopy: TMenuItem; //可键菜单复制
+//    FImg: TCustomImageList;
+//    FExt: TStrings;
+//    FIco: TIcon;
+//    FSel: TDragSel;    //拖动Fixed列时状态标记
+//    FSelRt: TGridRect; //拖选行列
+    //复制
+    procedure OnPmClick(Sender: TObject);
+  published
+    procedure DblClick; override;
+  protected
+    //单元格绘制
+    procedure DrawCell(ACol, ARow: Longint; ARect: TRect; AState: TGridDrawState); override;
+    function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
+    function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
+    //返回编辑值
+    //function GetEditText(ACol, ARow: Longint): string; override;
+    //function GetEditMask(ACol, ARow: Longint): string; override;
+    //鼠标 按下 移动 弹起
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    //procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    //procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    // 设置数据
+    procedure LoadData(AMem: TFDMemTable);
+    procedure UpData();
+  end;
+
+
+implementation
+
+uses
+  System.SysUtils, Winapi.Windows, System.Variants, uShellPopupMenu;
+
+
+
+
+{ TDataGrid }
+
+constructor TDataGrid.Create(AOwner: TComponent);
+//var
+//  ShInfo: SHFILEINFO;
+begin
+  inherited;
+
+  FClearSel.Left  := -1;
+  FClearSel.Right := -1;
+  FClearSel.Top   := -1;
+  FClearSel.Bottom:= -1;
+
+  Self.ColCount := 3;
+  Self.RowCount := 2;
+
+//  //图标
+//  FImg:= TCustomImageList.Create(nil);
+//  FImg.Height:= 16;
+//  FImg.Width := 16;
+//  //让图标透明
+//  FImg.DrawingStyle:= dsTransparent;
+//  FImg.ColorDepth := cd32Bit;
+//
+//  //后缀
+//  FExt:= TStringList.Create;
+//  FExt.BeginUpdate;
+
+
+
+//   AIndex:= FImgExt.IndexOf(rExt);
+//      if AIndex >-1 then begin
+//        ARow.ImageIndex := AIndex;
+//      end else begin
+//        FillChar(ShInfo, SizeOf(ShInfo), 0);
+//        SHGetFileInfo(LPCWSTR(rExt),FILE_ATTRIBUTE_NORMAL, ShInfo, SizeOf(ShInfo), SHGFI_USEFILEATTRIBUTES or SHGFI_ICON or SHGFI_SMALLICON);
+//        if ShInfo.hIcon>0 then begin
+//          rIco := TIcon.Create;
+//          rIco.Handle:= ShInfo.hIcon;
+//          AIndex:= TL.Images.AddIcon(rIco);
+//          rIco.Free;
+//          FImgExt.AddObject(rExt, TObject(AIndex));
+//          ARow.ImageIndex:= AIndex;
+//        end;
+//      end;
+
+
+
+
+
+  FMem := nil;
+  //Self.FSel := dsNone;
+  //设置样式
+  Self.DrawingStyle:= gdsGradient;
+  //设置单元格默认长和高
+  Self.DefaultColWidth := 100;
+  Self.DefaultRowHeight:= 18;
+
+  Self.ColWidths[0]:= 60; //设置行号宽度
+  Self.ColWidths[1]:=200; //文件名
+  Self.ColWidths[2]:=600; //路径
+
+  //设置字段高度
+  Self.RowHeights[0]:= 19;
+
+  //设置显示垂直水平滚动条
+  Self.ScrollBars:= System.UITypes.TScrollStyle.ssBoth;
+  //固定列和行
+  Self.FixedCols:= 1;
+  Self.FixedRows:= 1;
+  //分隔线大小
+  Self.GridLineWidth:= 1;
+  //
+  Self.Options:=[goFixedVertLine //每列显示分隔线
+                ,goFixedHorzLine //行号显示分隔线
+                ,goVertLine      //单元格显示垂直分隔线
+                ,goHorzLine      //单元格显示水平分隔线
+                ,goColSizing     //列可移动大小
+                ,goRowSelect     //选择一行
+                //,goRangeSelect       //矩形拖选
+                ,goDrawFocusSelected //选中焦点的也绘制选中颜色
+
+                //,goEditing         //编辑状态
+                //,goAlwaysShowEditor  //可编辑修改
+                ,goThumbTracking     //让内容数据按滚动条拖动显示
+                ,goFixedHotTrack
+                ];
+  //创建右键主菜单
+  //PM := TPopupMenu.Create(Self);
+  //复制菜单
+  //PmCopy := TMenuItem.Create(PM);
+  //PM.Items.Add(PmCopy);
+  //PmCopy.Caption := '复制 &';
+  //PmCopy.OnClick := OnPmClick;
+  //PmCopy.ShortCut:= Vcl.Menus.TextToShortCut('Ctrl+C');
+  //添加菜单
+  //Self.PopupMenu := PM;
+end;
+
+destructor TDataGrid.Destroy;
+begin
+//  PmCopy.DisposeOf;
+//  PmCopy:= nil;
+//  PM.DisposeOf;
+//  PM:= nil;
+  inherited;
+end;
+
+function TDataGrid.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean;
+var
+  gRect: TGridRect;
+begin
+  gRect:= Self.Selection;
+  if gRect.Top > 0 then begin
+    inherited;
+  end;
+end;
+
+function TDataGrid.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean;
+var
+  gRect: TGridRect;
+begin
+  gRect:= Self.Selection;
+  if gRect.Top > 0 then begin
+    inherited;
+  end;
+end;
+
+procedure TDataGrid.DrawCell(ACol, ARow: Longint; ARect: TRect; AState: TGridDrawState);
+var
+  Str,Exe: String;
+  Fmt: UInt;
+  Row: TFDDatSRow;//列
+  Val: Variant;
+  Rt: TRect;
+  Ext: String;
+  ACount: Byte;
+  hIco: Thandle;
+begin//绘制单元格
+  //inherited;
+  if FMem = nil then begin
+    Exit;
+  end;
+
+  Rt:= ARect;//对单元格区域缩小
+  InflateRect(Rt, -1, -1);
+
+  Str:= '';
+  if (ACol = 0)or(ARow = 0) then begin
+    if ARow > 0 then begin //行号
+      Str:= ARow.ToString;
+    end else begin//列名
+      if ACol > 0 then begin
+        Str:= FMem.Fields[ACol-1].DisplayName;
+        Str:= LowerCase(Str);
+      end;
+    end;
+    Fmt:= DT_VCENTER   //垂直居中
+        + DT_SINGLELINE//单行显示文本,回车和换行符都不断行
+        + DT_CENTER    //水平居中
+          ;
+  end else begin
+    Fmt:= DT_VCENTER   //垂直居中
+        + DT_SINGLELINE//单行显示文本,回车和换行符都不断行
+        + DT_LEFT      //水平靠左
+          ;
+    if(FMem.SourceView<>nil)then begin
+      Row := FMem.SourceView.Rows.ItemsI[ARow-1];
+      Val := Row.GetData(ACol-1);
+      if VarIsNull(Val)then begin
+        Exit;
+      end else begin
+        //Str := VarToStrDef(Val, '');
+        Str := VarToStr(Val);
+      end;
+    end;
+  end;
+
+  if (ARow > 0) and (ACol = 1) then begin
+//    Val := Row.GetData(1);
+//    Exe := VarToStr(Val);
+//    Ext := ExtractFileExt(Exe);
+//    //绘制图标
+//    if SameText(Ext, '.exe') then begin
+//      //ACount := ExtractIcon(HInstance, LPCWSTR(Exe), $FFFFFFFF); //多个图标
+//      //if ACount > 0 then begin
+//        //hIco:= ExtractIcon(HInstance, LPCWSTR(Exe), 0);
+//        //Winapi.Windows.DrawIconEx(Self.Canvas.Handle, Rt.Left+1, Rt.Top, hIco, 16, 16, 0, 0, DI_Normal);
+//      //end;
+//    end;
+    //绘制文件名
+    Inc(Rt.Left, 20);
+    Winapi.Windows.DrawText(Self.Canvas.Handle, PChar(Str), Length(Str), Rt, Fmt);
+  end else begin
+    //绘制全文件名
+    Winapi.Windows.DrawText(Self.Canvas.Handle, PChar(Str), Length(Str), Rt, Fmt);
+  end;
+end;
+
+procedure TDataGrid.LoadData(AMem: TFDMemTable);
+begin
+  if FMem <> AMem then begin
+    FMem:= AMem;
+  end;
+  UpData();
+end;
+
+
+procedure TDataGrid.DblClick;
+var
+  gRect: TGridRect;
+  Row : TFDDatSRow;//列
+  Val : Variant;
+  AStr: String;
+begin
+  inherited;
+  gRect:= Self.Selection;
+  if gRect.Top > 0 then begin
+    Row := FMem.SourceView.Rows.ItemsI[gRect.Top-1];
+    Val := Row.GetData(1);
+    AStr:= VarToStr(Val);
+    Winapi.ShellAPI.ShellExecute(0, 'open', LPWSTR(AStr), nil, nil, SW_SHOWNORMAL);
+  end;
+end;
+
+procedure TDataGrid.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  ACoord: TGridCoord;
+  Row : TFDDatSRow;//列
+  Val : Variant;
+  AStr: String;
+  ASel: TGridRect;
+begin
+  inherited;
+
+  ACoord:= Self.MouseCoord(X, Y); //根据XY返回所对应的行列
+  if (ACoord.X=-1)or(ACoord.Y=-1) then begin
+    Self.Selection := FClearSel;
+  end;
+
+  if (Button = TMouseButton.mbRight) and (Self.RowCount > 0) then
+  if (ACoord.Y > 0) and (ACoord.Y < Self.RowCount) then begin
+    if Self.Selection.Top = -1 then begin
+      ASel.Left  := 1;
+      ASel.Right := 2;
+      ASel.Top   := ACoord.Y;
+      ASel.Bottom:= ACoord.Y;
+      Self.Selection:= ASel;
+    end;
+    Self.Row := ACoord.Y;
+    Row := FMem.SourceView.Rows.ItemsI[ACoord.Y-1];
+    Val := Row.GetData(1);
+    AStr:= VarToStr(Val);
+    DisplayContextMenu(Self.Handle, AStr, Point(X,Y));
+  end;
+
+end;
+
+
+procedure TDataGrid.OnPmClick(Sender: TObject);
+begin
+  //
+end;
+
+procedure TDataGrid.UpData;
+begin
+  Self.Selection := Self.FClearSel;
+
+  Self.ColCount := FMem.Fields.Count+1;
+  Self.RowCount := FMem.RecordCount +1;
+  Self.Repaint;
+end;
+
+end.

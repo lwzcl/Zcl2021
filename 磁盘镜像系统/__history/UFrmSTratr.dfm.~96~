@@ -1,0 +1,390 @@
+object FrmSTratr: TFrmSTratr
+  Left = 439
+  Top = 309
+  BorderStyle = bsNone
+  Caption = 'DE'
+  ClientHeight = 553
+  ClientWidth = 905
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsMDIChild
+  OldCreateOrder = False
+  Position = poDefault
+  Visible = True
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 185
+    Width = 905
+    Height = 368
+    Align = alClient
+    BorderStyle = bsSingle
+    TabOrder = 0
+    object lbl_item: TLabel
+      Left = 168
+      Top = 0
+      Width = 3
+      Height = 13
+    end
+    object cxProgressBar1: TcxProgressBar
+      Left = 1
+      Top = 338
+      Align = alBottom
+      AutoSize = False
+      TabOrder = 0
+      Height = 25
+      Width = 899
+    end
+    object PageControl1: TPageControl
+      Left = 238
+      Top = 1
+      Width = 662
+      Height = 337
+      ActivePage = TabSheet2
+      Align = alClient
+      TabOrder = 1
+      TabPosition = tpBottom
+      object TabSheet1: TTabSheet
+        Caption = #26085#24535
+        object Memo1: TMemo
+          Left = 0
+          Top = 0
+          Width = 654
+          Height = 311
+          Align = alClient
+          Lines.Strings = (
+            '')
+          TabOrder = 0
+        end
+      end
+      object TabSheet2: TTabSheet
+        Caption = #20301#22270
+        ImageIndex = 1
+      end
+    end
+    object TreeView1: TTreeView
+      Left = 1
+      Top = 1
+      Width = 237
+      Height = 337
+      Align = alLeft
+      Indent = 19
+      TabOrder = 2
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 905
+    Height = 137
+    Align = alTop
+    TabOrder = 1
+    object GroupBox1: TGroupBox
+      Left = 1
+      Top = 1
+      Width = 336
+      Height = 135
+      Align = alLeft
+      Caption = #35774#22791
+      TabOrder = 0
+      object Labe_mode: TLabel
+        Left = 17
+        Top = 24
+        Width = 36
+        Height = 13
+        Caption = #22411#21495#65306
+      end
+      object Labe_SN: TLabel
+        Left = 17
+        Top = 56
+        Width = 48
+        Height = 13
+        Caption = #24207#21015#21495#65306
+      end
+      object Labe_Size: TLabel
+        Left = 17
+        Top = 96
+        Width = 36
+        Height = 13
+        Caption = #23481#37327#65306
+      end
+    end
+    object Panel3: TPanel
+      Left = 337
+      Top = 1
+      Width = 567
+      Height = 135
+      Align = alClient
+      TabOrder = 1
+      object GroupBox2: TGroupBox
+        Left = 1
+        Top = 69
+        Width = 565
+        Height = 65
+        Align = alBottom
+        Caption = #25805#20316
+        TabOrder = 0
+        object scGPLabel1: TscGPLabel
+          Left = 2
+          Top = 15
+          Width = 215
+          Height = 48
+          Align = alLeft
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBtnText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          FluentUIOpaque = False
+          TabOrder = 0
+          DragForm = False
+          DragTopForm = True
+          DrawTextMode = scdtmGDIPlus
+          ContentMarginLeft = 0
+          ContentMarginRight = 0
+          ContentMarginTop = 0
+          ContentMarginBottom = 0
+          DisabledFontColor = clNone
+          FrameWidth = 1
+          FillColor = clBtnText
+          FillColorAlpha = 20
+          FillColor2 = clNone
+          FillColor2Alpha = 255
+          FillGradientAngle = 0
+          FrameColor = clBtnText
+          FrameColorAlpha = 40
+          FrameRadius = 5
+          GlowEffect.Enabled = False
+          GlowEffect.Color = clBtnShadow
+          GlowEffect.AlphaValue = 255
+          GlowEffect.GlowSize = 7
+          GlowEffect.Offset = 0
+          GlowEffect.Intensive = True
+          GlowEffect.StyleColors = True
+          AutoSize = False
+          Alignment = taCenter
+          VertAlignment = scvtaCenter
+        end
+        object scGPLabel3: TscGPLabel
+          Left = 217
+          Top = 15
+          Width = 200
+          Height = 48
+          Align = alLeft
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBtnText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          FluentUIOpaque = False
+          TabOrder = 1
+          DragForm = False
+          DragTopForm = True
+          DrawTextMode = scdtmGDI
+          ContentMarginLeft = 0
+          ContentMarginRight = 0
+          ContentMarginTop = 0
+          ContentMarginBottom = 0
+          DisabledFontColor = clNone
+          FrameWidth = 1
+          FillColor = clBtnText
+          FillColorAlpha = 20
+          FillColor2 = clNone
+          FillColor2Alpha = 255
+          FillGradientAngle = 0
+          FrameColor = clBtnText
+          FrameColorAlpha = 40
+          FrameRadius = 5
+          GlowEffect.Enabled = False
+          GlowEffect.Color = clBtnShadow
+          GlowEffect.AlphaValue = 255
+          GlowEffect.GlowSize = 7
+          GlowEffect.Offset = 0
+          GlowEffect.Intensive = True
+          GlowEffect.StyleColors = True
+          AutoSize = False
+          Alignment = taCenter
+          VertAlignment = scvtaCenter
+          WordWrap = True
+        end
+      end
+      object GroupBox3: TGroupBox
+        Left = 1
+        Top = 1
+        Width = 565
+        Height = 65
+        Align = alTop
+        Caption = #27169#24335
+        TabOrder = 1
+        object scGPLabel2: TscGPLabel
+          Left = 2
+          Top = 15
+          Width = 561
+          Height = 48
+          Align = alClient
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBtnText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          FluentUIOpaque = False
+          TabOrder = 0
+          DragForm = False
+          DragTopForm = True
+          DrawTextMode = scdtmGDI
+          ContentMarginLeft = 5
+          ContentMarginRight = 5
+          ContentMarginTop = 5
+          ContentMarginBottom = 5
+          DisabledFontColor = clNone
+          FrameWidth = 1
+          FillColor = clBtnText
+          FillColorAlpha = 20
+          FillColor2 = clNone
+          FillColor2Alpha = 255
+          FillGradientAngle = 0
+          FrameColor = clBtnText
+          FrameColorAlpha = 40
+          FrameRadius = 5
+          GlowEffect.Enabled = False
+          GlowEffect.Color = clBtnShadow
+          GlowEffect.AlphaValue = 255
+          GlowEffect.GlowSize = 7
+          GlowEffect.Offset = 0
+          GlowEffect.Intensive = True
+          GlowEffect.StyleColors = True
+          AutoSize = True
+          VertAlignment = scvtaCenter
+        end
+      end
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 137
+    Width = 905
+    Height = 48
+    Align = alTop
+    TabOrder = 2
+    object cxButton1: TcxButton
+      Left = 23
+      Top = 15
+      Width = 43
+      Height = 17
+      Action = act_start
+      OptionsImage.Glyph.SourceDPI = 96
+      OptionsImage.Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001974455874536F6674776172650041646F626520496D616765526561
+        647971C9653C00000011744558745469746C6500506C61793B53746172743B5D
+        61407A000001F049444154785EAD904B6B13511886DF938C4E5A31C560A5174C
+        68E3056C91D07A5D98B6D616BC54105CC4DB527F801050BA511411A550D14271
+        2314ACC5955D14A90B770A820B15A9422B0DB69149C64E9C2493CB3973267E84
+        5884566DC0071E38B3380FEF1CFC3746A74FAA2353273A50252E54D035AB160C
+        6F1F4C1D7F32FCEC58A0EA407231EB9692B160735784B9F07978F2E8D0ED89FE
+        4D6B0E64CCA28B0B81B6C03E74EF8978B636745E56143677F7697FF4EAC821F5
+        9F01291D0821912E7C43412CC1DF588F03A1015F53C3EE3B5E9F3A736BBCF7EC
+        91D3ADAE3F066CDB814D811C37A0673EA168E7A0281C417F13426D875B37FB82
+        8FC30381D7D71F75F7ACBE409420B8036E5BC88B3434F3030C2B46A13C366E50
+        B06BFB36ECDC71707F9DB7F9E5E068F81C2A28CB0B245D1692E667E82C40C0CC
+        C7CBAE73D7C0343D48680652BAF62A9DE2EF0030B2A4FCFE0B8253C0CE4250E0
+        17564E85AE99588ACF7E492C583726EE7D9C0460AD5820CB6FE0A0C0CB0BE8DB
+        83F822C7F785989ED20B43CFC7E6C68C643E0D809336595A1110E547CC607E5E
+        428F7DCD657FF0876F5EC4EFCFBE3792008AA4241DAC465FA465CBA59B1DA58B
+        D742F6F968FBF8DEDEC610002FB9BEF2D80C7FA3EF4C4BFD852BEDD35DA7FC3D
+        00EA489574930C6B44216BC99ACA99A14AD8F2D42AF809500AE0796F04355100
+        00000049454E44AE426082}
+      TabOrder = 0
+    end
+    object cxButton2: TcxButton
+      Left = 72
+      Top = 15
+      Width = 43
+      Height = 17
+      Action = act_stop
+      OptionsImage.Glyph.SourceDPI = 96
+      OptionsImage.Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001974455874536F6674776172650041646F626520496D616765526561
+        647971C9653C00000011744558745469746C650050617573653B53746F703B3B
+        8A7A3C0000012249444154785EAD91C14AC4301086A7D68AE89328EC9BE81EF5
+        A6AFA04751F02D647D0341104FB23E8908227A12B6AE2D6B366B9B99D4FE2565
+        1743C8C51F063EBE0993494BFF996434DEBFB97E1C7EB4958FC6C35B3814180E
+        3D9C71DE4B7AF5B0D7E4FAA9992E9E1B309CF370E82DBDCB1AA067664BD9464A
+        2F933B02C3F53ECD127ACDEF97DE657DF509681AAB481A2170BF6AC07B1B101B
+        A1DA7E93888063DE1F604C7F1383C33E3C40A812859BC0111F1850B322B602F6
+        7CC53A32A01632A2A8D06F1DFBFE1D1CDB604E95D160CFB33038F21159135B03
+        8EF8D06FC4411170D4FB03D8DAE9E717CD94E978D5174549E5CCF940B283939D
+        B3A3F3C1E4F862501E9EEE5EC2A1C070E8E14CE75D923FDB6CB6B5ED846EEB07
+        E0FC96E3B9F3168D5F3C1F3F11AF0B16D00000000049454E44AE426082}
+      TabOrder = 1
+    end
+    object Panel5: TPanel
+      Left = 225
+      Top = 1
+      Width = 679
+      Height = 46
+      Align = alRight
+      TabOrder = 2
+      object RadioGroup1: TRadioGroup
+        Left = 1
+        Top = 1
+        Width = 677
+        Height = 44
+        Align = alClient
+        Caption = #26041#21521
+        TabOrder = 0
+      end
+      object RadioButton2: TRadioButton
+        Left = 345
+        Top = 17
+        Width = 113
+        Height = 17
+        Caption = #21453#21521
+        TabOrder = 1
+        OnClick = RadioButton2Click
+      end
+      object RadioButton1: TRadioButton
+        Left = 172
+        Top = 17
+        Width = 113
+        Height = 17
+        Caption = #27491#21521
+        Checked = True
+        TabOrder = 2
+        TabStop = True
+        OnClick = RadioButton1Click
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 544
+    Top = 408
+    object act_start: TAction
+      OnExecute = act_startExecute
+    end
+    object act_stop: TAction
+      OnExecute = act_stopExecute
+    end
+    object act_Continue: TAction
+    end
+    object act_close: TAction
+    end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 248
+    Top = 448
+  end
+end

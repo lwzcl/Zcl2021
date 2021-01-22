@@ -1,0 +1,29 @@
+object Frmimg: TFrmimg
+  Left = 0
+  Top = 0
+  Caption = 'Frmimg'
+  ClientHeight = 434
+  ClientWidth = 660
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  WindowState = wsMaximized
+  PixelsPerInch = 96
+  TextHeight = 13
+  object cxPageControl1: TcxPageControl
+    Left = 0
+    Top = 0
+    Width = 665
+    Height = 433
+    TabOrder = 0
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 433
+    ClientRectRight = 665
+    ClientRectTop = 0
+  end
+end

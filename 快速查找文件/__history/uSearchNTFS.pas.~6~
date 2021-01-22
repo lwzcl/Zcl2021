@@ -1,0 +1,353 @@
+unit uSearchNTFS;
+
+interface
+
+uses
+  System.Classes, FireDAC.Comp.Client, Data.DB;
+
+type
+  TSearchNTFS = class(TThread)//oracle 导出
+  private
+    //FMem: TFDMemTable;
+  public
+    FMem: TFDMemTable;
+    constructor Create(AMem: TFDMemTable);
+    procedure Execute(); override;
+    destructor Destroy; override;
+  end;
+
+implementation
+
+{ TOraExp }
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  Generics.Collections, System.IOUtils, FireDAC.DatS, Findfiles;
+
+type
+  _PARTITION_INFORMATION = record
+    StartingOffset: LARGE_INTEGER; // 指定分区开始的驱动器上的字节偏移量
+    PartitionLength: LARGE_INTEGER; // 指定分区的长度（以字节为单位）
+    HiddenSectors: Cardinal;      // 指定隐藏扇区的数量
+    PartitionNumber: Cardinal;    // 指定分区号
+    PartitionType: Byte;          // 分区类型
+    BootIndicator: Boolean;       // TRUE时，指示此分区是该设备的可引导（活动）分区。为FALSE时，该分区不可引导
+    RecognizedPartition: Boolean; // TRUE时，表示系统识别分区的类型。为FALSE时，系统无法识别分区的类型
+    RewritePartition: Boolean;    // TRUE时，表明分区信息已更改。为FALSE时，分区信息未更改
+  end;
+
+  PARTITION_INFORMATION = _PARTITION_INFORMATION;
+
+  PPARTITION_INFORMATION = ^_PARTITION_INFORMATION;
+
+  // 单条USN记录结构信息结构
+  _USN_RECORD = record
+    RecordLength: DWORD;                 // 该条USN记录长度
+    MajorVersion: WORD;                  // 主版本
+    MinorVersion: WORD;                  // 次版本
+    FileReferenceNumber: DWORDLONG;      // 文件引用数
+    ParentFileReferenceNumber: DWORDLONG; // 父文件引用数
+    Usn: Int64;                          // USN（一般为int64类型）
+    TimeStamp: LARGE_INTEGER;            // 时间戳
+    Reason: DWORD;                       // 原因
+    SourceInfo: DWORD;                   // 源信息
+    SecurityId: DWORD;                   // 安全
+    FileAttributes: DWORD;               // 文件属性（文件或目录）
+    FileNameLength: WORD;                // 文件名长度
+    FileNameOffset: WORD;                // 文件名偏移量
+    FileName: PWideChar;                 // 文件名第一位的指针
+  end;
+
+  USN_RECORD = _USN_RECORD;
+
+  PUSN_RECORD = ^_USN_RECORD;
+
+  // USN日志信息结构
+  _USN_JOURNAL_DATA = record
+    UsnJournalID: DWORDLONG;   // USN日志ID
+    FirstUsn: Int64;           // 第一条USN记录的位置
+    NextUsn: Int64;            // 下一条USN记录将要写入的位置
+    LowestValidUsn: Int64;     // 最小的有效的USN（FistUSN小于该值）
+    MaxUsn: Int64;             // USN最大值
+    MaximumSize: DWORDLONG;    // USN日志最大大小（按Byte算）
+    AllocationDelta: DWORDLONG; // USN日志每次创建和释放的内存字节数
+  end;
+
+  USN_JOURNAL_DATA = _USN_JOURNAL_DATA;
+
+  PUSN_JOURNAL_DATA = ^_USN_JOURNAL_DATA;
+
+  // 创建USN日志的结构
+  _CREATE_USN_JOURNAL_DATA = record
+    MaximumSize: DWORDLONG;    // NTFS文件系统分配给USN日志的最大大小（字节）
+    AllocationDelta: DWORDLONG; // USN日志每次创建和释放的内存字节数
+  end;
+
+  CREATE_USN_JOURNAL_DATA = _CREATE_USN_JOURNAL_DATA;
+
+  PCREATE_USN_JOURNAL_DATA = ^_CREATE_USN_JOURNAL_DATA;
+
+  // 删除USN日志的结构
+  _DELETE_USN_JOURNAL_DATA = record
+    UsnJournalID: DWORDLONG; // USN日志ID
+    DeleteFlags: DWORD;     // 删除标志
+  end;
+
+  DELETE_USN_JOURNAL_DATA = _DELETE_USN_JOURNAL_DATA;
+
+  PDELETE_USN_JOURNAL_DATA = ^_DELETE_USN_JOURNAL_DATA;
+
+  // 遍历USN记录时的结构
+  _MFT_ENUM_DATA = record
+    StartFileReferenceNumber: DWORDLONG; // 开始文件引用数，第一次调用必须为0
+    LowUsn: Int64;  // 最小USN，第一次调用，最好为0
+    HighUsn: Int64; // 最大USN
+  end;
+
+  MFT_ENUM_DATA = _MFT_ENUM_DATA;
+
+  PMFT_ENUM_DATA = ^_MFT_ENUM_DATA;
+
+  // 获取USN日志变更的结构
+  _READ_USN_JOURNAL_DATA = record
+    StartUsn: Int64;           // 变更的USN记录开始位置，即第一次读取USN日志的LastUsn值。
+    ReasonMask: DWORD;         // 原因标识
+    ReturnOnlyOnClose: DWORD;  // 只有在记录关闭时才返回
+    Timeout: DWORDLONG;        // 延迟时间
+    BytesToWaitFor: DWORDLONG; // 当USN日志大小大于该值时返回
+    UsnJournalID: DWORDLONG;   // USN日志ID
+  end;
+
+  READ_USN_JOURNAL_DATA = _READ_USN_JOURNAL_DATA;
+
+  PREAD_USN_JOURNAL_DATA = ^_READ_USN_JOURNAL_DATA;
+
+  // 文件定义
+  _FileInfo = record
+    FileName: string; // 文件名称
+    FileId: UInt64;   // 文件的ID
+    ParentId: UInt64; // 文件的父ID
+  end;
+
+  TFileInfo = _FileInfo;
+
+  PFileInfo = ^_FileInfo;
+
+constructor TSearchNTFS.Create(AMem: TFDMemTable);
+begin
+  inherited Create(True);
+  FMem := AMem;
+end;
+
+destructor TSearchNTFS.Destroy();
+begin
+  inherited;
+end;
+
+// TStringList 按数值排序函数
+function MySort(List: TStringList; Index1, Index2: Integer): Integer;
+var
+  L, R: Int64;
+begin
+  L := PFileInfo(List.Objects[Index1])^.FileId;
+  R := PFileInfo(List.Objects[Index2])^.FileId;
+  if L < R then
+  begin
+    Result := -1
+  end
+  else if L = R then
+  begin
+    Result := 0
+  end
+  else
+  begin
+    Result := 1;
+  end;
+end;
+
+procedure TSearchNTFS.Execute();
+
+  // 获取文件全路径，包含路径和文件名
+  procedure GetFullFileName(const ADiskName: WideChar; Files: TStringList);
+  var
+    ArrU64: TArray<UInt64>;
+    Idx: Integer;
+    ParentId: UInt64;
+    Item: Integer;
+  begin
+    // 将 FileList 按 FileReferenceNumber 数值排序
+    Files.Sorted := False;
+    Files.CustomSort(MySort);
+
+    // 将排序好的 FileReferenceNumber 复制到 UInt64 数组列表中，便于下面进行快速查找 <TArray.BinarySearch 为高效的折半查找>
+    SetLength(ArrU64, Files.Count);
+    for Idx := 0 to Files.Count - 1 do
+    begin
+      ArrU64[Idx] := PFileInfo(Files.Objects[Idx])^.FileId;
+    end;
+
+    // 获取每一个文件全路径名称
+    for Idx := 0 to Files.Count - 1 do
+    begin
+      ParentId := PFileInfo(Files.Objects[Idx])^.ParentId;
+      while TArray.BinarySearch(ArrU64, ParentId, Item) do
+      begin
+        ParentId := PFileInfo(Files.Objects[Item])^.ParentId;
+        Files.Strings[Idx] := PFileInfo(Files.Objects[Item])^.FileName + System.SysUtils.PathDelim + Files.Strings[Idx];
+      end;
+      Files.Strings[Idx] := (ADiskName + ':\' + Files.Strings[Idx]);
+    end;
+  end;
+
+  function SearchNTFS(const ADiskName: WideChar; AFiles: TStringList; out ErrStr: string): Boolean;
+  const
+    Len_Buf = 440 * 1024; // 500
+    PARTITION_IFS = $07;
+    USN_DeleteFlags = $00000001;
+  var
+    lpMaxiLen, lpFileFlags: DWORD;
+    Path: array[0..MAX_PATH - 1] of WideChar;
+    hTmp: THandle;
+    hFile: THandle;
+    pInfo: PARTITION_INFORMATION;
+    dwRet: DWORD;
+    CUSN: CREATE_USN_JOURNAL_DATA; //创建
+    USN: USN_JOURNAL_DATA;
+    DUSN: DELETE_USN_JOURNAL_DATA; //删除
+
+    MEnum: MFT_ENUM_DATA;
+    Int64SZ: UInt;
+    Buf: array[0..Len_Buf - 1] of WideChar;
+    UsnRecord: PUSN_RECORD;
+    AFileName: string;
+    pFile: PFileInfo;
+    Idx: Integer;
+  begin
+    ErrStr := '';
+    Result := False;
+    // 1.是否是NTFS磁盘格式
+    GetVolumeInformation(PWideChar(ADiskName + ':\') // 磁盘驱动器代码字符串
+, nil        // 磁盘驱动器卷标名称
+, 0          // 磁盘驱动器卷标名称长度
+, nil        // 磁盘驱动器卷标序列号
+, lpMaxiLen  // 系统允许的最大文件名长度
+, lpFileFlags// 文件系统标识
+, Path       // 文件操作系统名称
+, MAX_PATH   // 文件操作系统名称长度
+);
+
+    if SameText(Path, 'NTFS') then
+    begin
+      // 2.打开磁盘 (需要管理员权限)
+      hTmp := 0;
+      hFile := Winapi.Windows.CreateFile(PWideChar('\\.\' + ADiskName + ':'), Generic_Read + Generic_Write      // 打开卷 操作方式(读或写)
+        , File_Share_Read + File_Share_Write// 共享方式
+        , nil, Open_Existing                     // 文件创建方法
+        , File_Attribute_ReadOnly           // 文件属性
+        , hTmp);
+      if hFile = INVALID_HANDLE_VALUE then
+      begin
+        ErrStr := '请用管理员权限：' + SysErrorMessage(GetLastError());
+        Exit;
+      end;
+      // 3.初始化USN日志文件
+      if not DeviceIoControl(hFile, FSCTL_CREATE_USN_JOURNAL, @CUSN, Sizeof(CUSN), nil, 0, dwRet, nil) then
+      begin
+        ErrStr := '初始化USN日志错误：' + SysErrorMessage(GetLastError());
+        Exit;
+      end;
+      // 4.获取USN日志基本信息
+      if not DeviceIoControl(hFile, FSCTL_QUERY_USN_JOURNAL, nil, 0, @USN, Sizeof(USN), dwRet, nil) then
+      begin
+        ErrStr := '获取USN日志错误：' + SysErrorMessage(GetLastError());
+        Exit;
+      end;
+      // 5.枚举USN日志文件中的所有记录
+      MEnum.StartFileReferenceNumber := 0;
+      MEnum.LowUsn := 0;
+      MEnum.HighUsn := USN.NextUsn;
+      Int64SZ := Sizeof(Int64);
+      while DeviceIoControl(hFile, FSCTL_ENUM_USN_DATA, @MEnum, Sizeof(MEnum), @Buf, Len_Buf, dwRet, nil) do
+      begin
+        // 找到第一个 USN 记录
+        UsnRecord := PUSN_RECORD(Integer(@Buf) + Int64SZ);
+        while dwRet > 60 do
+        begin
+          // 获取文件名称
+          AFileName := PWideChar(Integer(UsnRecord) + UsnRecord^.FileNameOffset);
+          AFileName := Copy(AFileName, 1, UsnRecord^.FileNameLength div 2);
+          // 将文件信息添加到列表中
+          pFile := AllocMem(Sizeof(TFileInfo)); // 注意要释放内存
+          pFile^.FileName := AFileName;
+          pFile^.FileId := UsnRecord^.FileReferenceNumber;
+          pFile^.ParentId := UsnRecord^.ParentFileReferenceNumber;
+          AFiles.AddObject(AFileName, TObject(pFile));
+          // 获取下一个 USN 记录
+          if UsnRecord.RecordLength > 0 then
+          begin
+            Dec(dwRet, UsnRecord.RecordLength)
+          end
+          else
+          begin
+            Break;
+          end;
+          UsnRecord := PUSN_RECORD(Cardinal(UsnRecord) + UsnRecord.RecordLength);
+        end;
+        Move(Buf, MEnum, Int64SZ);
+      end;
+      // 7.获取文件全路径，包含路径和文件名
+      GetFullFileName(ADiskName, TStringList(AFiles));
+      // 8.释放内存
+      for Idx := AFiles.Count - 1 downto 0 do
+      begin
+        FreeMem(PFileInfo(AFiles.Objects[Idx]));
+      end;
+      // 9.删除USN日志文件信息
+      DUSN.UsnJournalID := USN.UsnJournalID;
+      DUSN.DeleteFlags := USN_DeleteFlags;
+      DeviceIoControl(hFile, FSCTL_DELETE_USN_JOURNAL, @DUSN, Sizeof(DUSN), nil, 0, dwRet, nil);
+      CloseHandle(hFile);
+      Result := True;
+    end;
+  end;
+
+var
+  Idx: Integer;
+  AStr, AErr: string;
+  AFiles: TStringList;
+begin
+  inherited;
+  AFiles := TStringList.Create;
+  AFiles.BeginUpdate;
+  if form2.CB_all.Checked = True then
+  begin
+    for AStr in TDirectory.GetLogicalDrives do
+    begin
+      Synchronize(
+        procedure
+        begin
+          Form2.Lab_start.Caption := ' 正在扫描 ' + AStr;
+        end);
+      AFiles.Clear;
+      SearchNTFS(AStr.Chars[0], AFiles, AErr);
+      for Idx := 0 to AFiles.Count - 1 do
+      begin
+        FMem.AppendRecord([ExtractFileName(AFiles[Idx]), AFiles[Idx]]);
+      end;
+      AFiles.Clear;
+    end;
+    AFiles.EndUpdate;
+    AFiles.Free;
+    AFiles := nil;
+    Synchronize(
+      procedure
+      begin
+        Form2.Lab_start.Caption := ' 扫描完成 ' + AErr;
+      end);
+    PostMessage(Form2.Handle, WM_MyGrid, 0, 0);
+  end;
+
+end;
+
+end.
+

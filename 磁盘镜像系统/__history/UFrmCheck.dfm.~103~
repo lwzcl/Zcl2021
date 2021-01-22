@@ -1,0 +1,285 @@
+object FrmCheck: TFrmCheck
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = #30828#30424#22351#36947#26816#27979
+  ClientHeight = 459
+  ClientWidth = 866
+  Color = clWhite
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  Visible = True
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 648
+    Top = 0
+    Width = 218
+    Height = 459
+    Align = alRight
+    TabOrder = 0
+    object cxButton1: TcxButton
+      Left = 16
+      Top = 143
+      Width = 75
+      Height = 25
+      Action = act_check
+      OptionsImage.Glyph.SourceDPI = 96
+      OptionsImage.Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        6100000015744558745469746C6500436865636B3B4D61726B3B5469636B0B00
+        C7240000026B49444154785E95924D48156B18C77F338D7A94B436816090828B
+        8B94919BBE886304C5599CEA9A14145177211246AB3641F6B16861044610B408
+        23C842FB2410B4ACB06BDDD55510823072532267A19E93E76BE6FDCAF3323910
+        44F4303CFF7786797EFFE77978BD9B2FF6BE715DA7955F8589040CC63818345A
+        99B13389D13D5EA9B87DDB05FE341EFC7B310EB89E5286824A912ABC8FDCA2F4
+        F3BB9575952D48A9019C6580466B89D63FAAED4F51B11558585CA27A75259EE7
+        A2748092060B2891941168AD4213EB132930323AC1FF935FA85B5FC3F12371A4
+        F6114202E009A12C512AB5E2684AC931F67C7F708CB565BBB8717690AEAB5B48
+        67965853E12382B003DF170855442AC9CC4C8AFEC7236C6DD9C4EE783323AF26
+        A8ADDEC7A9F66EAEF49DA03D99205659812F0A148A3E165022E5FD1CD97C9EFE
+        872FE9E9FA8F47AF6ED1737D809D1B4FD2D176817BC397A9AD536C68A822574C
+        53EE6411225C621048842C10C880B644923BCFBA39DF7997C9E9C3FC55BF994C
+        EE33E3538374FC93643E9BB2E355951510221C41488D6F013E750D352C6632DC
+        7E728ED3477BC175B874AD93FD895616B2B380C618F0450E1128003C19683B93
+        54826F6A9EA6E675BC1B9FE2E9EB5E1AEB9B70631962D5057C195877005FE6A3
+        7B2084A628F30825D00616E51CDB7734F27CA88FBEE14F1C3BF437393F83C158
+        773025C368075228029127500227BC44F3B9AF1C4CB652597E80B9F4478A4202
+        7A05501405A20EA4B11DC4BC1AB02E1A6D0CE9FC1C0BB95930066F5585FD8E01
+        6DECCE501680F18A3931363CF4210E267C88344CB6D605B4E5E1601081790B48
+        6FA0673A017880CBEFC309D50002F0BF03C5148A5699E7E19C0000000049454E
+        44AE426082}
+      TabOrder = 0
+    end
+    object lb_Mode: TcxLabel
+      Left = 6
+      Top = 16
+      Caption = 'lb_Mode'
+    end
+    object lb_SN: TcxLabel
+      Left = 5
+      Top = 56
+      Caption = 'cxLabel1'
+    end
+    object lb_Size: TcxLabel
+      Left = 6
+      Top = 104
+      Caption = 'cxLabel1'
+    end
+    object cxButton3: TcxButton
+      Left = 16
+      Top = 192
+      Width = 75
+      Height = 25
+      Action = act_end
+      OptionsImage.Glyph.SourceDPI = 96
+      OptionsImage.Glyph.Data = {
+        89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+        610000001974455874536F6674776172650041646F626520496D616765526561
+        647971C9653C00000011744558745469746C650050617573653B53746F703B3B
+        8A7A3C0000012249444154785EAD91C14AC4301086A7D68AE89328EC9BE81EF5
+        A6AFA04751F02D647D0341104FB23E8908227A12B6AE2D6B366B9B99D4FE2565
+        1743C8C51F063EBE0993494BFF996434DEBFB97E1C7EB4958FC6C35B3814180E
+        3D9C71DE4B7AF5B0D7E4FAA9992E9E1B309CF370E82DBDCB1AA067664BD9464A
+        2F933B02C3F53ECD127ACDEF97DE657DF509681AAB481A2170BF6AC07B1B101B
+        A1DA7E93888063DE1F604C7F1383C33E3C40A812859BC0111F1850B322B602F6
+        7CC53A32A01632A2A8D06F1DFBFE1D1CDB604E95D160CFB33038F21159135B03
+        8EF8D06FC4411170D4FB03D8DAE9E717CD94E978D5174549E5CCF940B283939D
+        B3A3F3C1E4F862501E9EEE5EC2A1C070E8E14CE75D923FDB6CB6B5ED846EEB07
+        E0FC96E3B9F3168D5F3C1F3F11AF0B16D00000000049454E44AE426082}
+      TabOrder = 4
+    end
+    object scGPLabel_ok: TscGPLabel
+      Left = 16
+      Top = 288
+      Width = 13
+      Height = 23
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clLime
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      FluentUIOpaque = False
+      TabOrder = 5
+      DragForm = False
+      DragTopForm = True
+      DrawTextMode = scdtmGDI
+      ContentMarginLeft = 5
+      ContentMarginRight = 5
+      ContentMarginTop = 5
+      ContentMarginBottom = 5
+      DisabledFontColor = clNone
+      FrameWidth = 1
+      FillColor = clBtnText
+      FillColorAlpha = 20
+      FillColor2 = clNone
+      FillColor2Alpha = 255
+      FillGradientAngle = 0
+      FrameColor = clLime
+      FrameColorAlpha = 80
+      FrameRadius = 5
+      GlowEffect.Enabled = False
+      GlowEffect.Color = clBtnShadow
+      GlowEffect.AlphaValue = 255
+      GlowEffect.GlowSize = 7
+      GlowEffect.Offset = 0
+      GlowEffect.Intensive = True
+      GlowEffect.StyleColors = True
+      AutoSize = True
+    end
+    object scGPLabel_wring: TscGPLabel
+      Left = 16
+      Top = 328
+      Width = 13
+      Height = 23
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clYellow
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      FluentUIOpaque = False
+      TabOrder = 6
+      DragForm = False
+      DragTopForm = True
+      DrawTextMode = scdtmGDI
+      ContentMarginLeft = 5
+      ContentMarginRight = 5
+      ContentMarginTop = 5
+      ContentMarginBottom = 5
+      DisabledFontColor = clNone
+      FrameWidth = 1
+      FillColor = clBtnText
+      FillColorAlpha = 20
+      FillColor2 = clNone
+      FillColor2Alpha = 255
+      FillGradientAngle = 0
+      FrameColor = clBtnText
+      FrameColorAlpha = 40
+      FrameRadius = 5
+      GlowEffect.Enabled = False
+      GlowEffect.Color = clBtnShadow
+      GlowEffect.AlphaValue = 255
+      GlowEffect.GlowSize = 7
+      GlowEffect.Offset = 0
+      GlowEffect.Intensive = True
+      GlowEffect.StyleColors = True
+      AutoSize = True
+    end
+    object scGPLabel_err: TscGPLabel
+      Left = 16
+      Top = 368
+      Width = 13
+      Height = 23
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      FluentUIOpaque = False
+      TabOrder = 7
+      DragForm = False
+      DragTopForm = True
+      DrawTextMode = scdtmGDI
+      ContentMarginLeft = 5
+      ContentMarginRight = 5
+      ContentMarginTop = 5
+      ContentMarginBottom = 5
+      DisabledFontColor = clNone
+      FrameWidth = 1
+      FillColor = clBtnText
+      FillColorAlpha = 20
+      FillColor2 = clNone
+      FillColor2Alpha = 255
+      FillGradientAngle = 0
+      FrameColor = clRed
+      FrameColorAlpha = 80
+      FrameRadius = 5
+      GlowEffect.Enabled = False
+      GlowEffect.Color = clBtnShadow
+      GlowEffect.AlphaValue = 255
+      GlowEffect.GlowSize = 7
+      GlowEffect.Offset = 0
+      GlowEffect.Intensive = True
+      GlowEffect.StyleColors = True
+      AutoSize = True
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 649
+    Height = 459
+    Align = alLeft
+    TabOrder = 1
+    object cxPageControl1: TcxPageControl
+      Left = 1
+      Top = 1
+      Width = 647
+      Height = 457
+      Align = alClient
+      TabOrder = 0
+      Properties.ActivePage = cxtbs1
+      Properties.CustomButtons.Buttons = <>
+      Properties.Options = [pcoAlwaysShowGoDialogButton, pcoCloseButton, pcoGradient, pcoGradientClientArea, pcoRedrawOnResize]
+      Properties.TabPosition = tpBottom
+      ClientRectBottom = 428
+      ClientRectLeft = 3
+      ClientRectRight = 641
+      ClientRectTop = 3
+      object cxtbs1: TcxTabSheet
+        Caption = #26085#24535
+        ImageIndex = 0
+        object Memo1: TMemo
+          Left = 0
+          Top = 0
+          Width = 638
+          Height = 425
+          Align = alClient
+          TabOrder = 0
+        end
+      end
+      object cxtbs2: TcxTabSheet
+        Caption = #20301#22270
+        ImageIndex = 1
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 265
+    Top = 328
+    object act_check: TAction
+      Caption = #26816#27979
+      OnExecute = act_checkExecute
+    end
+    object act_end: TAction
+      Caption = #32467#26463
+      OnExecute = act_endExecute
+    end
+    object act_stop: TAction
+      Caption = #26242#20572
+    end
+    object act_conunt: TAction
+      Caption = #32487#32493
+    end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = Timer1Timer
+    Left = 401
+    Top = 208
+  end
+end

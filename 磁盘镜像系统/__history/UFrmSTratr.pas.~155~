@@ -1,0 +1,382 @@
+unit UFrmSTratr;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint, uMyGrid,
+  dxSkinXmas2008Blue, cxProgressBar, UThread, Vcl.StdCtrls, System.Actions,
+  Vcl.ActnList, dxBar, cxClasses, Vcl.Menus, cxButtons, uFrmMain,
+  dxSkinOffice2019Colorful, Vcl.ComCtrls, scControls, scGPControls, cxRadioGroup,
+  cxTextEdit, cxMaskEdit, cxDropDownEdit;
+
+type
+  TFrmSTratr = class(TForm)
+    Panel1: TPanel;
+    cxProgressBar1: TcxProgressBar;
+    lbl_item: TLabel;
+    ActionList1: TActionList;
+    act_start: TAction;
+    act_stop: TAction;
+    act_Continue: TAction;
+    act_close: TAction;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    Timer1: TTimer;
+    Panel2: TPanel;
+    GroupBox1: TGroupBox;
+    Labe_mode: TLabel;
+    Labe_SN: TLabel;
+    Labe_Size: TLabel;
+    Panel3: TPanel;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    Panel4: TPanel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Memo1: TMemo;
+    scGPLabel1: TscGPLabel;
+    scGPLabel2: TscGPLabel;
+    scGPLabel3: TscGPLabel;
+    Panel5: TPanel;
+    RadioGroup1: TRadioGroup;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure act_startExecute(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure cxRadioButton1Click(Sender: TObject);
+    procedure cxRadioButton2Click(Sender: TObject);
+    procedure RadioButton1Click(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
+    procedure act_stopExecute(Sender: TObject);
+  private
+    { Private declarations }
+    tmp: LONG64;
+    jindu: PLONG64;
+    state: Boolean;
+    direction: Boolean;
+    procedure OnClick(Sender: TObject; Index: UInt64);
+  public
+    { Public declarations }
+    procedure myimgstart;
+    property myState: Boolean read state write state;
+    property myjindu: PLONG64 read jindu write jindu;
+    property MyDirection: Boolean read direction write direction;
+  end;
+
+var
+  FrmSTratr: TFrmSTratr;
+  MyGrid: TDataGrid;
+
+const
+  dataitem: Integer = 512 * 64;
+
+implementation
+
+{$R *.dfm}
+uses
+  UdiskIo;
+
+procedure TFrmSTratr.act_startExecute(Sender: TObject);
+begin
+  TThread.CreateAnonymousThread(myimgstart).Start;
+end;
+
+procedure TFrmSTratr.act_stopExecute(Sender: TObject);
+begin
+  state := True;
+end;
+
+procedure TFrmSTratr.cxRadioButton1Click(Sender: TObject);
+begin
+  Application.MessageBox('这是正序', '友情提示', MB_OK);
+
+end;
+
+procedure TFrmSTratr.cxRadioButton2Click(Sender: TObject);
+begin
+  Application.MessageBox('这是倒序', '友情提示', MB_OK);
+
+end;
+
+procedure TFrmSTratr.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+
+  case Application.MessageBox('您确定要停止？', '提示', MB_OKCANCEL) of
+    IDOK:
+      begin
+
+        CanClose := True;
+        Self.Free;
+      end;
+    IDCANCEL:
+      begin
+        CanClose := False;
+      end;
+  end;
+
+end;
+
+procedure TFrmSTratr.FormCreate(Sender: TObject);
+var
+  tmplong: LONG64;
+  ok: string;
+begin
+  MyDirection := True;
+  tmp := 0;
+  MyGrid := TDataGrid.Create(nil);
+  MyGrid.Align := alClient;
+  MyGrid.Parent := TabSheet2;
+  MyGrid.Width := 4000;
+  MyGrid.OnSmallClick := Self.OnClick;
+  myGrid.RowCount := (StrToInt64(Form2.lbl_yuan_szie.Caption)) div 64 div 100;
+  Labe_mode.Caption := '硬盘型号：' + Form2.lbl_Yuan_Mode.Caption;
+  Labe_SN.Caption := '硬盘序列号为：' + Form2.lbl_Yuan_Sn.Caption;
+  Labe_Size.Caption := '硬盘扇区数为：' + Form2.lbl_yuan_szie.Caption;
+  scGPLabel2.Caption := '目标盘型号：' + Form2.lbl_MuBiao_Mode.Caption + '硬盘序列号：' + Form2.lbl_MuBiao_SN.Caption + '容量为：' + Form2.lbl_MuBiao_size.Caption;
+
+end;
+
+procedure TFrmSTratr.myimgstart;
+var
+  Thddsize: LONG64;
+  p: TBytes;
+  index: LONG64;
+//  dataitem: Integer;
+  starTime: TTime;
+  endTime: TTime;
+  endsize: LONG64;
+  kedu: LONG64;
+  Sdisk: THandle;
+  tdisk: THandle;
+  filestr: TFileStream;
+  THDeviceHandle: THandleStream;
+  SHDeviceHandle: THandleStream;
+begin
+  try
+
+//    dataitem := 32768;
+//    dataitem :=512;
+    SetLength(p, dataitem);
+    state := False;
+    endsize := Form2.EndSec * 512;
+    if endsize <= 0 then
+    begin
+      ShowMessage('请用管理员权限运行此程序！');
+      Exit
+    end;
+    kedu := (StrToInt64(Form2.lbl_yuan_szie.Caption) * 512) div 100;
+    if Form2.myisHdd <> True then
+    begin
+      Memo1.Lines.Append('开始时间：' + formatdatetime('yyyy" 年 "mm" 月 "dd" 日 "ddddhh":"mm":"ss"', now));
+      if MyDirection = True then
+      begin
+        try
+          Sdisk := CreateFile(PWideChar(Form2.lbl_Yuan_prot.Caption), GENERIC_READ or GENERIC_WRITE,  //如果只是读扇区,可以用GENERIC_READ
+            FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+          SHDeviceHandle := THandleStream.Create(Sdisk);
+          tdisk := CreateFile(PWideChar(Form2.lbl_MuBiao_prot.Caption), GENERIC_READ or GENERIC_WRITE,  //如果只是读扇区,可以用GENERIC_READ
+            FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+          THDeviceHandle := THandleStream.Create(tdisk);
+          starTime := Now();
+          Form2.tmr_jishi.Enabled := True;
+          Timer1.Enabled := True;
+          index := Form2.StrarSec * 512;
+          while (index < endsize) do
+          begin
+            if state <> true then
+            begin
+
+              SHDeviceHandle.Seek(index, soBeginning);
+              SHDeviceHandle.Read(p, dataitem);
+              THDeviceHandle.Seek(index, soBeginning);
+              THDeviceHandle.Write(p, dataitem);
+              index := index + dataitem;
+              MyGrid[index div dataitem] := 1;
+              jindu := @index;
+
+            end
+            else
+            begin
+              Break;
+            end;
+
+          end;
+
+        except
+          on E: Exception do
+          begin
+            ShowMessage(e.Message);
+          end;
+
+        end;
+      end
+      else
+      begin
+//        Application.MessageBox('这是反向', '友情提示', MB_OK);
+        try
+          Sdisk := CreateFile(PWideChar(Form2.lbl_Yuan_prot.Caption), GENERIC_READ or GENERIC_WRITE,  //如果只是读扇区,可以用GENERIC_READ
+            FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+          SHDeviceHandle := THandleStream.Create(Sdisk);
+          tdisk := CreateFile(PWideChar(Form2.lbl_MuBiao_prot.Caption), GENERIC_READ or GENERIC_WRITE,  //如果只是读扇区,可以用GENERIC_READ
+            FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+          THDeviceHandle := THandleStream.Create(tdisk);
+          starTime := Now();
+          Form2.tmr_jishi.Enabled := True;
+          Timer1.Enabled := True;
+          index := Form2.EndSec * 512;
+//           index := Form2.StrarSec * 512;
+          while (True) do
+          begin
+            index := index - dataitem;
+            if (state <> true) and (index >= 0) then
+            begin
+              SHDeviceHandle.Seek(index, soBeginning);
+              SHDeviceHandle.Read(p, dataitem);
+              THDeviceHandle.Seek(index, soBeginning);
+              THDeviceHandle.Write(p, dataitem);
+              MyGrid[index div dataitem] := 1;
+              jindu := @index;
+
+            end
+            else
+            begin
+              SHDeviceHandle.Seek(0, soBeginning);
+              SHDeviceHandle.Read(p, index);
+              THDeviceHandle.Seek(0, soBeginning);
+              THDeviceHandle.Write(p, index);
+              MyGrid[0] := 1;
+              jindu := 0;
+              Break;
+            end;
+
+          end;
+
+        except
+          on E: Exception do
+          begin
+            ShowMessage(e.Message);
+          end;
+
+        end;
+
+      end;
+
+    end
+    else
+    begin
+
+      try
+        filestr := TFileStream.Create(Form2.dxStatusBar1.Panels[3].Text, fmCreate, fmShareDenyNone);
+        Sdisk := CreateFile(PWideChar(Form2.lbl_Yuan_prot.Caption), GENERIC_READ or GENERIC_WRITE,  //如果只是读扇区,可以用GENERIC_READ
+          FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+        SHDeviceHandle := THandleStream.Create(Sdisk);
+        Form2.tmr_jishi.Enabled := True;
+        FrmSTratr.Timer1.Enabled := True;
+        while (index < endsize) do
+        begin
+          if state <> true then
+          begin
+            SHDeviceHandle.Seek(index, soBeginning);
+            SHDeviceHandle.Read(p, dataitem);
+            filestr.Write(p, dataitem);
+//              tdisk.FileWritSector(filestr, index, p, dataitem);
+            index := index + dataitem;
+            MyGrid[index div 32768] := 1;
+            myjindu := @index;
+              //FrmSTratr.cxProgressBar1.Position := Integer(index div kedu);
+          end
+          else
+          begin
+            Break;
+          end;
+
+        end;
+
+      except
+        on E: Exception do
+        begin
+          ShowMessage(e.Message);
+
+        end;
+
+      end;
+
+    end;
+
+  finally
+    begin
+
+      Form2.tmr_jishi.Enabled := False;
+      CloseHandle(Sdisk);
+      CloseHandle(tdisk);
+      THDeviceHandle.Free;
+      SHDeviceHandle.Free;
+      filestr.Free;
+      FrmSTratr.cxProgressBar1.Position := 100;
+      Memo1.Lines.Append('结束扇区'+(index div 512).ToString);
+      Memo1.Lines.Append('结束时间：' + formatdatetime('yyyy" 年 "mm" 月 "dd" 日 "ddddhh":"mm":"ss"', now));
+      Form2.dxStatusBar1.Panels[3].Text := '己完成！';
+      FrmSTratr.timer1.Enabled := False;
+
+    end;
+
+  end;
+
+end;
+
+procedure TFrmSTratr.OnClick(Sender: TObject; Index: UInt64);
+begin
+  Showmessage('我是第 ' + Index.ToString + ' 个格子');
+end;
+
+procedure TFrmSTratr.RadioButton1Click(Sender: TObject);
+begin
+  MyDirection := True;
+
+end;
+
+procedure TFrmSTratr.RadioButton2Click(Sender: TObject);
+begin
+
+  MyDirection := False;
+
+end;
+
+procedure TFrmSTratr.Timer1Timer(Sender: TObject);
+var
+  kedu: LONG64;
+  index: LONG64;
+begin
+  kedu := (StrToInt64(Form2.lbl_yuan_szie.Caption) * 512) div 100;
+  index := myjindu^;
+  scGPLabel1.Caption := (index div 512).ToString;
+  cxProgressBar1.Position := Integer(index div kedu);
+//  Form2.dxStatusBar1.Panels[3].Text := '每秒' + ((index - tmp) div 1024 div 1024).ToString + 'MB';
+  scGPLabel3.Caption := '每秒' + ((index - tmp) div 1024 div 1024).ToString + 'MB';
+  tmp := index;
+end;
+
+end.
+

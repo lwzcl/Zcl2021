@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2009-12-17 15:10:19.709.pas,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.pas=F:\编程资源整理\磁盘文件恢复\uMain.pas</Transaction>
+    <Transaction>2009-12-17 15:10:19.741.dfm,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.dfm=F:\编程资源整理\磁盘文件恢复\uMain.dfm</Transaction>
+    <Transaction>2009-12-17 15:10:43.335.bdsproj,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Project1.bdsproj=F:\编程资源整理\磁盘文件恢复\NTFS_Tool.bdsproj</Transaction>
+    <Transaction>2009-12-17 18:23:07.478.pas,F:\编程资源整理\磁盘文件恢复\FileDetails.pas=</Transaction>
+    <Transaction>2009-12-17 18:23:07.494.dfm,F:\编程资源整理\磁盘文件恢复\FileDetails.dfm=</Transaction>
+    <Transaction>2009-12-17 23:04:42.890.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uScanThread.pas</Transaction>
+    <Transaction>2009-12-17 23:05:32.656.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uNTFS.pas</Transaction>
+    <Transaction>2009-12-18 00:08:13.890.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uRecoverThread.pas</Transaction>
+  </Transactions>
+</BorlandProject>

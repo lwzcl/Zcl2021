@@ -1,0 +1,279 @@
+{******************************************************************************}
+{*                                                                            *}
+{*             NTFS磁盘恢复工具  不赖猴  QQ:35927925                          *}
+{*                                                                            *}
+{******************************************************************************}
+
+unit uMain;
+
+interface
+
+uses
+  Windows, SysUtils, Classes, Controls, Forms, Dialogs,
+ Buttons, FileCtrl, uNTFS,  StdCtrls, Graphics, ExtCtrls, ComCtrls;
+
+type
+  TMainForm = class(TForm)
+    Panel1: TPanel;
+    btnScan: TBitBtn;
+    ListView1: TListView;
+    Drive_Background: TShape;
+    DriveList: TListBox;
+    Drive_BackgroundSeparator: TShape;
+    Drive_Icon: TImage;
+    Drive_Title: TLabel;
+    DriveName: TLabel;
+    DriveSerial: TLabel;
+    DriveSize: TLabel;
+    DriveMFTLocation: TLabel;
+    DriveMFTSize: TLabel;
+    DriveMFTRecordsCount: TLabel;
+    PB: TProgressBar;
+    DLB: TDirectoryListBox;
+    DCB: TDriveComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    RadioGroup1: TRadioGroup;
+    rb1: TRadioButton;
+    rb2: TRadioButton;
+    btnRecover: TBitBtn;
+    edPath: TEdit;
+    CheckBox1: TCheckBox;
+    DeleteFileCount: TLabel;
+    Bevel1: TBevel;
+    procedure FormCreate(Sender: TObject);
+    procedure btnScanClick(Sender: TObject);
+    procedure btnRecoverClick(Sender: TObject);
+    procedure DLBChange(Sender: TObject);
+    procedure ListView1Compare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
+    procedure ListView1ColumnClick(Sender: TObject; Column: TListColumn);
+    procedure CheckBox1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure DriveListClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure GetDiskType(DriveList: TListBox);
+
+  public
+    { Public declarations }
+    diskInfo : TDISK_INFORMATION;
+    function CheckNTFS(aDrive: string): string;
+  end;
+
+
+
+var
+  MainForm    : TMainForm;
+  IsSearching : boolean;
+  StopScan    : boolean;
+  IsRecovering: boolean;
+  StopRecover : boolean;
+  curDrive    : string;
+  MFT_Location : int64;
+  MFT_End      : int64;
+  MFT_Size     : int64;
+  MFT_Record_Count : integer;
+  ColumnToSort: Integer;
+
+implementation
+
+uses uScanThread, uRecoverThread;
+
+
+{$R *.dfm}
+
+function TMainForm.CheckNTFS(aDrive: string):string;
+var
+  hDevice : THandle;
+  PBootSequence : ^TBOOT_SEQUENCE;
+  dwRead : Cardinal;
+begin
+  result := '';
+  hDevice := CreateFile( PChar('\\.\'+aDrive),
+                         GENERIC_READ,
+                         FILE_SHARE_READ or FILE_SHARE_WRITE,
+                         nil,
+                         OPEN_EXISTING,
+                         FILE_ATTRIBUTE_NORMAL,
+                         0);
+  if (hDevice = INVALID_HANDLE_VALUE) then
+  begin
+    CloseHandle(hDevice);
+    exit;
+  end;
+  New(PBootSequence);
+  ZeroMemory(PBootSequence, SizeOf(TBOOT_SEQUENCE));
+  SetFilePointer(hDevice, 0, nil, FILE_BEGIN);
+  ReadFile(hDevice,PBootSequence^, 512,dwread,nil);
+  MainForm.DriveName.Caption := '名称: '+ GetVolumeLabel(aDrive[1]);
+  MainForm.DriveSerial.Caption := '序号: ' + IntToHex(PBootSequence.VolumeSerialNumber,8);
+  with PBootSequence^ do
+  begin
+    result := cOEMID[1]+cOEMID[2]+cOEMID[3]+cOEMID[4];
+    Dispose(PBootSequence);
+    Closehandle(hDevice);
+  end;
+end;
+
+
+procedure TMainForm.CheckBox1Click(Sender: TObject);
+var
+  i : integer;
+begin
+  for i := 0 to ListView1.Items.Count - 1 do
+    ListView1.Items[i].Checked := CheckBox1.Checked;
+    
+end;
+
+procedure TMainForm.DLBChange(Sender: TObject);
+begin
+  edPath.Text := DLB.Directory;
+end;
+
+procedure TMainForm.DriveListClick(Sender: TObject);
+begin
+    CheckNTFS(DriveList.Items[DriveList.ItemIndex]);
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+var
+  i           : integer;
+  Bits        : set of 0..25;
+  ValidDrives : TStrings;
+  tmpStr      : string;
+begin
+//  ValidDrives := TStringList.Create;
+//  try
+//    integer(Bits) := GetLogicalDrives;
+//    for i := 0 to 25 do
+//    begin
+//      tmpStr := Char(i+Ord('A'))+':';
+//      if (i in Bits) and (GetDriveType(Pchar(tmpStr+'\'))=DRIVE_FIXED) then
+//      begin
+//        if CheckNTFS(tmpStr) = 'NTFS' then
+//          ValidDrives.Append(tmpStr);
+//      end;
+//    end;
+//    DriveList.Items.Assign(ValidDrives);
+//  finally
+//    ValidDrives.Free;
+//  end;
+  IsSearching := false;
+  StopScan    := false;
+  IsRecovering := false;
+  StopRecover := false;
+  edPath.Text := DLB.Directory;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+    GetDiskType(DriveList);
+end;
+
+procedure TMainForm.GetDiskType(DriveList: TListBox);
+var
+  str: string;
+  Drivers: Integer;
+  driver: char;
+  i, temp: integer;
+  d1, d2, d3, d4: DWORD;
+  ss: string;
+begin
+
+  ss := '';
+  Drivers := GetLogicalDrives;
+  temp := (1 and Drivers);
+  for i := 0 to 26 do
+  begin
+    if temp = 1 then
+    begin
+      driver := char(i + integer('A'));
+      str := driver;
+      if (driver <> '') and (getdrivetype(pchar(str)) <> drive_cdrom) and (getdrivetype(pchar(str)) <> DRIVE_REMOVABLE) then  //这里可以修改 获取光盘 可移动磁盘
+      begin
+        GetDiskFreeSpace(pchar(str), d1, d2, d3, d4);
+        DriveList.Items.Add(str + ':');
+
+      end;
+    end;
+    Drivers := (Drivers shr 1);
+    temp := (1 and Drivers);
+
+  end;
+
+end;
+
+procedure TMainForm.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
+begin
+  ColumnToSort := Column.Index;
+  (Sender as TCustomListView).AlphaSort;
+end;
+
+procedure TMainForm.ListView1Compare(Sender: TObject; Item1, Item2: TListItem;
+  Data: Integer; var Compare: Integer);
+var
+  ix: Integer;
+begin
+  if ColumnToSort = 0 then
+    Compare := CompareText(Item1.Caption,Item2.Caption)
+  else
+  begin
+   ix := ColumnToSort - 1;
+   Compare := CompareText(Item1.SubItems[ix],Item2.SubItems[ix]);
+  end;
+
+end;
+
+procedure TMainForm.btnRecoverClick(Sender: TObject);
+var
+  i : integer;
+  File_SavePath : string;
+  file_count : integer;
+begin
+  if isRecovering  then
+  begin
+    StopRecover := true;
+    exit;
+  end;
+  file_count := 0;
+  for I := 0 to ListView1.items.Count - 1 do
+  begin
+    if listview1.Items[i].Checked then
+    begin
+      file_count := file_Count + 1;
+    end;
+  end;
+  if file_count = 0 then
+  begin
+    showmessage('请选择恢复的文件!');
+    exit;
+  end;
+  StopRecover := false;
+  TRecoverThread.Create(false,DriveList.Items[DriveList.ItemIndex],file_count,diskInfo);
+end;
+
+procedure TMainForm.btnScanClick(Sender: TObject);
+begin
+  if isSearching then
+  begin
+    StopScan := true;
+    exit;
+  end;
+  if DriveList.ItemIndex < 0 then
+  begin
+    Showmessage('请先选择一个磁盘!');
+    exit;
+  end;
+  StopScan := false;
+  DeleteFileCount.Caption := '删除的文件数: 0';
+  TScanThread.Create(false,DriveList.Items[DriveList.ItemIndex]);
+end;
+
+
+
+
+
+
+
+end.

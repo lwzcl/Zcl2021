@@ -1,0 +1,28 @@
+object Frm_Raid: TFrm_Raid
+  Left = 0
+  Top = 0
+  Caption = 'Frm_Raid'
+  ClientHeight = 423
+  ClientWidth = 449
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 449
+    Height = 423
+    Align = alClient
+    TabOrder = 0
+    ExplicitLeft = 32
+    ExplicitTop = 32
+    ExplicitWidth = 878
+    ExplicitHeight = 580
+  end
+end

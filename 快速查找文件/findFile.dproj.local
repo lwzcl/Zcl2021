@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.073,=D:\zcl\Delphi\soft\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.602,D:\zcl\Delphi\soft\Unit2.pas=D:\zcl\Delphi\soft\快速查找文件\Findfiles.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.216,=D:\zcl\Delphi\soft\快速查找文件\uShellPopupMenu.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.627,=D:\zcl\Delphi\soft\快速查找文件\uSearchNTFS.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.602,D:\zcl\Delphi\soft\Unit2.dfm=D:\zcl\Delphi\soft\快速查找文件\Findfiles.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.734,D:\zcl\Delphi\soft\Project4.dproj=D:\zcl\Delphi\soft\快速查找文件\findFile.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.760,=D:\zcl\Delphi\soft\快速查找文件\NTFS_Find.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.016,=D:\zcl\Delphi\soft\快速查找文件\uSearchGrid.pas</Transaction>
+  </Transactions>
+</BorlandProject>

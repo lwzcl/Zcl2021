@@ -1,0 +1,18 @@
+program findFile;
+
+uses
+  Vcl.Forms,
+  Findfiles in 'Findfiles.pas' {Form2},
+  NTFS_Find in 'NTFS_Find.pas',
+  uSearchGrid in 'uSearchGrid.pas',
+  uShellPopupMenu in 'uShellPopupMenu.pas',
+  uSearchNTFS in 'uSearchNTFS.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

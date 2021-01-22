@@ -1,0 +1,175 @@
+unit UFrm_Erase;
+
+interface
+
+uses
+  Winapi.Windows, UMyerase_Thread, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxProgressBar,
+  Vcl.StdCtrls, Vcl.ExtCtrls, System.Actions, Vcl.ActnList;
+
+type
+  TFrm_Erase = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Panel3: TPanel;
+    cxProgressBar1: TcxProgressBar;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    ActionList1: TActionList;
+    act_start: TAction;
+    act_stop: TAction;
+    act_counter: TAction;
+    Label3: TLabel;
+    Timer1: TTimer;
+    procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure act_startExecute(Sender: TObject);
+    procedure act_stopExecute(Sender: TObject);
+    procedure act_counterExecute(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { Private declarations }
+    tmp: LONG64;
+  public
+    { Public declarations }
+    function TeraseData(): Boolean;
+  end;
+
+var
+  Frm_Erase: TFrm_Erase;
+  number: ^LONG64;
+  stop: Boolean;
+  myok: Myerase_Thread;
+
+implementation
+
+{$R *.dfm}
+uses
+  uFrmMain;
+
+procedure TFrm_Erase.act_counterExecute(Sender: TObject);
+begin
+  myok.Suspended := False;
+  Form2.tmr_jishi.Enabled := True;
+end;
+
+procedure TFrm_Erase.act_startExecute(Sender: TObject);
+begin
+  myok := Myerase_Thread.Create(true);
+  try
+    myok.Start;
+
+  except
+    on E: Exception do
+    begin
+      ShowMessage('启动失败！');
+
+    end;
+
+  end;
+end;
+
+procedure TFrm_Erase.act_stopExecute(Sender: TObject);
+begin
+  try
+    myok.Suspended := True;
+    //Timer1.Enabled := False;
+    Form2.tmr_jishi.Enabled := False;
+  except
+    on E: Exception do
+      ShowMessage(e.Message);
+  end;
+end;
+
+procedure TFrm_Erase.FormCreate(Sender: TObject);
+begin
+  stop := True;
+  Label1.Caption := '硬盘型号：' + Form2.lbl_Yuan_Mode.Caption;
+  Label2.Caption := '硬盘序列号为：' + Form2.lbl_Yuan_Sn.Caption;
+  Label3.Caption := '硬盘扇区数为：' + Form2.lbl_yuan_szie.Caption;
+  tmp := 0;
+
+end;
+
+procedure TFrm_Erase.FormDestroy(Sender: TObject);
+begin
+  Frm_Erase.Free;
+end;
+
+function TFrm_Erase.TeraseData(): Boolean;
+var
+  drive: PWideChar;
+  //drive : string;
+  str: string;
+  p: pchar;
+  hDeviceHandle: Thandle;
+  THDeviceHandle: THandleStream;
+  szie: LONG64;
+  index: LONG64;
+  kedu: LONG64;
+  kv: LONG64;
+begin
+  try
+    try
+
+      index := 0;
+      kv := 0;
+      szie := StrToInt64(Form2.lbl_yuan_szie.Caption) * 512;
+      drive := PWideChar(Form2.lbl_Yuan_prot.Caption);
+      kedu := szie div 100;
+      p := allocmem(32768);
+      hDeviceHandle := CreateFile(drive, GENERIC_ALL, FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+      if (hDeviceHandle <> INVALID_HANDLE_VALUE) then
+      begin
+//
+        THDeviceHandle := THandleStream.Create(hDeviceHandle);
+        Timer1.Enabled := True;
+        Form2.tmr_jishi.Enabled := True;
+        while index < szie do
+        begin
+          if stop = False then
+          begin
+            Break
+          end;
+
+          THDeviceHandle.Seek(index, soBeginning);
+          THDeviceHandle.Write(p[0], 32768);
+          index := index + 32768;
+          cxProgressBar1.Position := Integer(index div kedu);
+          number := @index;
+
+        end;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage(e.Message);
+
+      end;
+    end;
+  finally
+    freemem(p, 32768);
+    closehandle(hDeviceHandle);
+    THDeviceHandle.Free;
+
+  end;
+end;
+
+procedure TFrm_Erase.Timer1Timer(Sender: TObject);
+var
+  num: LONG64;
+begin
+  Timer1.Enabled := False;
+  num := number^;
+  Label3.Caption := '每秒：' + ((num - tmp) div 1024 div 1024).ToString + 'MB的速度';
+  tmp := num;
+  Timer1.Enabled := True;
+end;
+
+end.
+

@@ -1,0 +1,17 @@
+unit UDiskType;
+
+interface
+uses
+  System.Classes, Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants;
+type
+  diskFileType = class
+  private
+  public
+
+  end;
+
+implementation
+
+end.
+

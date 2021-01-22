@@ -1,0 +1,37 @@
+unit UFrm_Raid;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+
+type
+  TFrm_Raid = class(TForm)
+    Panel1: TPanel;
+    Button1: TButton;
+    Edit_1: TEdit;
+    Button2: TButton;
+    Edit_2: TEdit;
+    Button3: TButton;
+    Edit_3: TEdit;
+    Button4: TButton;
+    Edit_4: TEdit;
+    Button5: TButton;
+    Edit_5: TEdit;
+    But_start: TButton;
+    But_canle: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_Raid: TFrm_Raid;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,15 @@
+program Êý¾Ý¿âÐÞ¸´;
+
+uses
+  Vcl.Forms,
+  Umain in 'Umain.pas' {FMain},
+  UmyThrear in 'UmyThrear.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFMain, FMain);
+  Application.Run;
+end.

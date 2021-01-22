@@ -1,0 +1,31 @@
+program Project1;
+
+uses
+  Vcl.Forms,
+  uFrmMain in 'uFrmMain.pas' {Form2},
+  UFrm_selectDisk in 'UFrm_selectDisk.pas' {Form1},
+  UFrmimg in 'UFrmimg.pas' {Frmimg},
+  UThread in 'UThread.pas',
+  UFrmstrart_end in 'UFrmstrart_end.pas' {Frmstrart_end},
+  UFrmSTratr in 'UFrmSTratr.pas' {FrmSTratr},
+  UFrm_ViewSector in 'UFrm_ViewSector.pas' {Frm_ViewSector},
+  UdiskIo in 'UdiskIo.pas',
+  UMysystemType in 'UMysystemType.pas',
+  UFrmToFile in 'UFrmToFile.pas' {FrmToFile},
+  UFrmFindPartition in 'UFrmFindPartition.pas' {FrmFindPartition},
+  UFrmCheck in 'UFrmCheck.pas' {FrmCheck},
+  uCheckered in 'uCheckered.pas',
+  UmycheckThread in 'UmycheckThread.pas',
+  UmyFindPatThread in 'UmyFindPatThread.pas',
+  uMyGrid in 'uMyGrid.pas',
+  UFrm_Erase in 'UFrm_Erase.pas' {Frm_Erase};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm2, Form2);
+  Application.CreateForm(TFrm_Erase, Frm_Erase);
+  Application.Run;
+end.

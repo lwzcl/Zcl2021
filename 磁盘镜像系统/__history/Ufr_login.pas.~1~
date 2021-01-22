@@ -1,0 +1,28 @@
+unit Ufr_login;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, scControls, scGPControls,
+  scGPExtControls, Vcl.StdCtrls, Vcl.Mask;
+
+type
+  TFrm_login = class(TForm)
+    scGPEdit1: TscGPEdit;
+    scGPPasswordEdit1: TscGPPasswordEdit;
+    scGPButton1: TscGPButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_login: TFrm_login;
+
+implementation
+
+{$R *.dfm}
+
+end.

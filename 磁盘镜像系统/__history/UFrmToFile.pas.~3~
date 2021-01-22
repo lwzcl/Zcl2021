@@ -1,0 +1,36 @@
+unit UFrmToFile;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TForm3 = class(TForm)
+    Label1: TLabel;
+    SaveDialog1: TSaveDialog;
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form3: TForm3;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm3.FormShow(Sender: TObject);
+begin
+     if SaveDialog1.Execute then
+     begin
+       Label1.Caption := SaveDialog1.FileName;
+     end;
+
+end;
+
+end.

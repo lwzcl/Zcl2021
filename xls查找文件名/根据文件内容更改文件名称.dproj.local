@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.425,=D:\zcl\Delphi\soft\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.805,=D:\zcl\Delphi\soft\xls查找文件名\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.773,D:\zcl\Delphi\soft\xls查找文件名\Unit1.pas=D:\zcl\Delphi\soft\xls查找文件名\UMyHeard.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.900,D:\zcl\Delphi\soft\Umain.pas=D:\zcl\Delphi\soft\Unit2.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.793,D:\zcl\Delphi\soft\xls查找文件名\UMyHeard.pas=D:\zcl\Delphi\soft\xls查找文件名\UMyThread.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.900,D:\zcl\Delphi\soft\Umain.dfm=D:\zcl\Delphi\soft\Unit2.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.989,D:\zcl\Delphi\soft\根据文件内容更改文件名称.dproj=D:\zcl\Delphi\soft\Project4.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -1,0 +1,49 @@
+unit Ujingdu;
+
+interface
+
+uses
+  System.Classes, Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, Winapi.ShellAPI, Vcl.Dialogs, UThread;
+
+type
+  Tjd = class(TThread)
+  private
+    { Private declarations }
+    jindu: PLONG64;
+    state: Boolean;
+  protected
+    procedure Execute; override;
+  public
+    procedure myimgstart;
+  end;
+
+var
+  Work: Tword;
+
+implementation
+
+uses
+  uFrmMain , UFrmSTratr;
+
+procedure Tjd.Execute;
+begin
+  myimgstart();
+end;
+
+procedure Tjd.myimgstart;
+var
+  kedu: LONG64;
+  index : LONG64;
+begin
+  kedu := (StrToInt64(Form2.lbl_yuan_szie.Caption) * 512) div 100;
+  index :=0;
+  while True do
+  begin
+    index := Work.myjindu;
+    FrmSTratr.cxProgressBar1.Position := Integer( index div kedu);
+  end;
+end;
+
+end.
+
