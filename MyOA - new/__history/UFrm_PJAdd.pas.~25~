@@ -1,0 +1,115 @@
+unit UFrm_PJAdd;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxButtons;
+
+type
+  TFrm_PJAdd = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    Label4: TLabel;
+    DBEdit4: TDBEdit;
+    Label5: TLabel;
+    DBEdit5: TDBEdit;
+    Label6: TLabel;
+    DBEdit6: TDBEdit;
+    Label7: TLabel;
+    DBEdit7: TDBEdit;
+    Panel2: TPanel;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    DBEdit8: TDBEdit;
+    Label8: TLabel;
+    DBComboBox1: TDBComboBox;
+    procedure cxButton1Click(Sender: TObject);
+    procedure cxButton2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+    procedure AddHddType();
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_PJAdd: TFrm_PJAdd;
+
+implementation
+
+uses
+  UDM_XS;
+
+{$R *.dfm}
+
+procedure TFrm_PJAdd.AddHddType;
+begin
+
+  with DM_XS.ADQ_PJ do
+  begin
+    close;
+    sql.clear;
+    sql.text := 'select Tyle_Name from HDDType';
+    open;
+  end;
+
+  DM_XS.ADQ_PJ.first;
+  //tmp := DM_XS.ADQ_XS.RecordCount;
+  while not DM_XS.ADQ_PJ.eof do
+  begin
+    //DBComboBox1.Items.Add(DM_XS.ADQ_PJ.Fields[0].AsString);
+    //DBComboBox1.Items.Add(DM_XS.ADQ_PJ.Fieldbyname('Tyle_Name').AsString);
+    DBComboBox1.Items.Add('西数');
+    DM_XS.ADQ_PJ.next;
+  end;
+end;
+
+procedure TFrm_PJAdd.cxButton1Click(Sender: TObject);
+begin
+  if (length(Trim(DBEdit2.Text)) >1)and (length(Trim(DBEdit8.Text)) >1)  then
+  begin
+
+    DM_XS.ADQ_PJ.Post;
+  end else
+  begin
+    Application.MessageBox('请填写完整信息！', '提示', MB_OK + MB_ICONINFORMATION);
+    DBEdit2.SetFocus;
+  end;
+
+end;
+
+procedure TFrm_PJAdd.cxButton2Click(Sender: TObject);
+begin
+  self.Close;
+end;
+
+procedure TFrm_PJAdd.FormShow(Sender: TObject);
+begin
+     AddHddType;
+end;
+
+end.
+

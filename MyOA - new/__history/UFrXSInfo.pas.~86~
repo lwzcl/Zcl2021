@@ -1,0 +1,179 @@
+unit UFrXSInfo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinTheBezier,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
+  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  Vcl.ComCtrls, Vcl.WinXPickers, scGPExtControls, scGPDBControls, scControls,
+  scCalendar, scDBControls, Vcl.Menus, dxSkinOffice2019Colorful, cxButtons;
+
+type
+  TFrm_XSInfo = class(TForm)
+    Panel1: TPanel;
+    DBEdit1: TDBEdit;
+    DBEdit2: TDBEdit;
+    DBEdit3: TDBEdit;
+    DBEdit5: TDBEdit;
+    DBEdit6: TDBEdit;
+    DBEdit7: TDBEdit;
+    DBEdit8: TDBEdit;
+    Button1: TButton;
+    Button2: TButton;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    DBMemo1: TDBMemo;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Panel2: TPanel;
+    Label1: TLabel;
+    DBComboBox2: TDBComboBox;
+    DBComboBox3: TDBComboBox;
+    DBComboBox4: TDBComboBox;
+    DBComboBox1: TDBComboBox;
+    scDBDateEdit1: TscDBDateEdit;
+    scDBDateEdit2: TscDBDateEdit;
+    scDBDateEdit3: TscDBDateEdit;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure cxButton1Click(Sender: TObject);
+    procedure cxButton2Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure AddHddinfo();
+
+  public
+    { Public declarations }
+     procedure  findsql(s:string);
+  end;
+
+var
+  Frm_XSInfo: TFrm_XSInfo;
+
+implementation
+
+uses
+  UDM_XS,UrmKeHuInfo,UFrm_kehu_find;
+{$R *.dfm}
+
+procedure TFrm_XSInfo.AddHddinfo;
+begin
+   with DM_XS.FDQuery1 do
+  begin
+    close;
+    sql.clear;
+    sql.text := 'select Tyle_Name from HDDType';
+    open;
+  end;
+
+  DM_XS.FDQuery1.first;
+  //tmp := DM_XS.ADQ_XS.RecordCount;
+  while not DM_XS.FDQuery1.eof do
+  begin
+    //DBComboBox1.Items.Add(DM_XS.ADQ_PJ.Fields[0].AsString);
+    DBComboBox1.Items.Add(DM_XS.FDQuery1.Fieldbyname('Tyle_Name').AsString);
+
+    DM_XS.FDQuery1.next;
+  end;
+end;
+
+procedure TFrm_XSInfo.Button1Click(Sender: TObject);
+var
+  UserName: string;
+begin
+
+  if (DBEdit1.Text <> '') and  (DBEdit6.Text <>'') then
+  begin
+    DM_XS.FDQuery1.Post;
+    Application.MessageBox('数据保存成功！', '提示');
+    Close;
+  end
+  else
+  begin
+    Application.MessageBox('请输入完整信息！', '提示');
+    DBEdit1.SetFocus;
+  end;
+
+end;
+
+procedure TFrm_XSInfo.Button2Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TFrm_XSInfo.cxButton1Click(Sender: TObject);
+begin
+     //查询
+     Frm_kehu_find:= TFrm_kehu_find.Create(self);
+     with   Frm_kehu_find do
+     begin
+        Caption   := '客户查询系统';
+       ShowModal ;
+       Free;
+     end;
+end;
+
+procedure TFrm_XSInfo.cxButton2Click(Sender: TObject);
+begin
+      //添加
+      Frm_KhInfo:= TFrm_KhInfo.Create(self);
+      with Frm_KhInfo do
+      begin
+        DM_XS.FDQ_kehu.Append;
+        ShowModal;
+        Free;
+      end;
+end;
+
+procedure TFrm_XSInfo.findsql(s: string);
+begin
+     //mysql:= Format(vsql,[Quotedstr('%'+s+'%')]);
+     with DM_XS.FDQuery1 do
+     begin
+       Close;
+       sql.Text  := s;
+       Open;
+     end;
+
+end;
+
+procedure TFrm_XSInfo.FormShow(Sender: TObject);
+begin
+     AddHddinfo;
+end;
+
+end.
+

@@ -1,0 +1,24 @@
+unit UFrm_cg_add;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+
+type
+  TFrm_cg_add = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_cg_add: TFrm_cg_add;
+
+implementation
+
+{$R *.dfm}
+
+end.

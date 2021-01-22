@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.282,D:\Delphi\soft\MyOA - new\UrmInput.dfm=D:\Delphi\soft\MyOA - new\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.720,D:\Delphi\soft\MyOA - new\Urm_CgMain.pas=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.447,D:\Delphi\soft\MyOA\UFrm_Login.pas=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.735,D:\Delphi\soft\MyOA - new\Unit1.pas=D:\Delphi\soft\MyOA - new\UFrm_cg_add.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.001,=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.365,D:\Delphi\soft\MyOA\UFrm_kehu_find.pas=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.720,D:\Delphi\soft\MyOA - new\Urm_CgMain.dfm=D:\Delphi\soft\MyOA - new\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.052,D:\Delphi\soft\MyOA - new\Unit1.dfm=D:\Delphi\soft\MyOA - new\UFrm_cg_info.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.735,D:\Delphi\soft\MyOA - new\Unit1.dfm=D:\Delphi\soft\MyOA - new\UFrm_cg_add.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.368,D:\Delphi\soft\Project3.dproj=D:\Delphi\soft\MyOA\MYOA.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.365,D:\Delphi\soft\MyOA\UFrm_kehu_find.dfm=D:\Delphi\soft\MyOA\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.758,=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.725,D:\Delphi\soft\MyOA\Unit1.dfm=D:\Delphi\soft\MyOA\UFrm_PJSelect.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.748,D:\Delphi\soft\MyOA\Unit1.dfm=D:\Delphi\soft\MyOA\UFrm_Find.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.582,D:\Delphi\soft\MyOA\Unit1.dfm=D:\Delphi\soft\MyOA\UrmKeHuInfo.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.360,D:\Delphi\soft\MyOA\Unit1.dfm=D:\Delphi\soft\MyOA\UFrm_CW.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.310,D:\Delphi\soft\MyOA\Unit1.dfm=D:\Delphi\soft\MyOA\UDM_XS.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.197,D:\Delphi\soft\Unit4.pas=D:\Delphi\soft\MyOA\UFrm_Main.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.219,=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.489,=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.881,=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.052,D:\Delphi\soft\MyOA - new\Unit1.pas=D:\Delphi\soft\MyOA - new\UFrm_cg_info.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.944,=D:\Delphi\soft\Unit4.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.725,D:\Delphi\soft\MyOA\Unit1.pas=D:\Delphi\soft\MyOA\UFrm_PJSelect.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.827,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.258,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.989,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.447,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.748,D:\Delphi\soft\MyOA\Unit1.pas=D:\Delphi\soft\MyOA\UFrm_Find.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.447,D:\Delphi\soft\MyOA\UFrm_Login.dfm=D:\Delphi\soft\MyOA\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.189,D:\Delphi\soft\MyOA - new\Urm_cgInput.dfm=D:\Delphi\soft\MyOA - new\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.938,D:\Delphi\soft\MyOA\UitemTools.pas=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.189,D:\Delphi\soft\MyOA - new\Urm_cgInput.pas=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.197,D:\Delphi\soft\Unit4.dfm=D:\Delphi\soft\MyOA\UFrm_Main.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.261,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.818,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.282,D:\Delphi\soft\MyOA - new\UrmInput.pas=D:\Delphi\soft\MyOA - new\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.665,D:\Delphi\soft\MyOA\UFrm_PJAdd.dfm=D:\Delphi\soft\MyOA\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.776,=D:\Delphi\soft\MyOA\UFrXSInfo.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.665,D:\Delphi\soft\MyOA\UFrm_PJAdd.pas=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.659,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.360,D:\Delphi\soft\MyOA\Unit1.pas=D:\Delphi\soft\MyOA\UFrm_CW.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.310,D:\Delphi\soft\MyOA\Unit1.pas=D:\Delphi\soft\MyOA\UDM_XS.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.868,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.582,D:\Delphi\soft\MyOA\Unit1.pas=D:\Delphi\soft\MyOA\UrmKeHuInfo.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.298,=D:\Delphi\soft\MyOA\Unit1.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="UDM_XS.pas"/>
+    <File Path="UDM_XS.dfm"/>
+    <File Path="UFrm_CW.pas"/>
+    <File Path="UFrm_CW.dfm"/>
+    <File Path="UFrm_Find.pas"/>
+    <File Path="UFrm_Find.dfm"/>
+    <File Path="UFrm_Main.pas"/>
+    <File Path="UFrm_Main.dfm"/>
+    <File Path="UFrm_PJAdd.pas"/>
+    <File Path="UFrm_PJAdd.dfm"/>
+    <File Path="UFrm_PJSelect.pas"/>
+    <File Path="UFrm_PJSelect.dfm"/>
+    <File Path="UFrXSInfo.pas"/>
+    <File Path="UFrXSInfo.dfm"/>
+    <File Path="UitemTools.pas"/>
+    <File Path="UFrm_Login.pas"/>
+    <File Path="UFrm_Login.dfm"/>
+    <File Path="UrmKeHuInfo.pas"/>
+    <File Path="UrmKeHuInfo.dfm"/>
+    <File Path="UFrm_kehu_find.pas"/>
+    <File Path="UFrm_kehu_find.dfm"/>
+    <File Path="Urm_CgMain.pas"/>
+    <File Path="Urm_CgMain.dfm"/>
+    <File Path="Urm_cgInput.pas"/>
+    <File Path="Urm_cgInput.dfm"/>
+    <File Path="UFrm_cg_info.pas"/>
+    <File Path="UFrm_cg_info.dfm"/>
+    <File Path="UFrm_cg_add.pas"/>
+    <File Path="UFrm_cg_add.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

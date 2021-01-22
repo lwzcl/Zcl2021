@@ -1,0 +1,276 @@
+unit Urm_CgMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, cxGraphics,
+  cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkroom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkinLilian, dxSkinLiquidSky,
+  dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark,
+  dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray, dxSkinOffice2013White,
+  dxSkinOffice2016Colorful, dxSkinOffice2016Dark, dxSkinOffice2019Colorful,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxControls, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, cxNavigator, dxDateRanges, Data.DB, cxDBData,
+  cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid, Vcl.StdCtrls, cxButtons,
+  dxGDIPlusClasses, cxContainer, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar, cxDBEdit, Vcl.ComCtrls, System.Actions, Vcl.ActnList;
+
+type
+  TFrm_Cg_Main = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Image1: TImage;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    ComboBox1: TComboBox;
+    Edit1: TEdit;
+    Lab_optin: TLabel;
+    GroupBox1: TGroupBox;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioButton3: TRadioButton;
+    cxGrid1DBTableView1cg_gys: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_cp: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_yongtu: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_feiyong: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_shuliang: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_dainjian: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_date: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_xiangqing: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_lianxieren: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_tile: TcxGridDBColumn;
+    cxGrid1DBTableView1cg_jiezhangdate: TcxGridDBColumn;
+    DateTimePicker1: TDateTimePicker;
+    DateTimePicker2: TDateTimePicker;
+    PopupMenu1: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    ActionList1: TActionList;
+    act_add: TAction;
+    act_mod: TAction;
+    act_del: TAction;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure cxButton1Click(Sender: TObject);
+    procedure act_modExecute(Sender: TObject);
+    procedure act_addExecute(Sender: TObject);
+    procedure act_delExecute(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function mysqlex(mysql: string): Boolean;
+    function ischeckbox(): string;
+  end;
+
+var
+  Frm_Cg_Main: TFrm_Cg_Main;
+
+implementation
+
+uses Urm_cgInput, UDM_XS;
+{$R *.dfm}
+
+procedure TFrm_Cg_Main.act_addExecute(Sender: TObject);
+begin
+  Frm_cgInput := TFrm_cgInput.Create(Application);
+
+  with Frm_cgInput do
+  begin
+    DM_XS.FDQ_cg.Append();
+    ShowModal;
+    Free;
+  end;
+end;
+
+procedure TFrm_Cg_Main.act_delExecute(Sender: TObject);
+begin
+
+  case Application.MessageBox('你确定要删除数据吗？', '友情提醒', MB_OKCANCEL) of
+    IDOK:
+      begin
+        DM_XS.FDQ_cg.Delete;
+      end;
+    IDCANCEL:
+      begin
+
+      end;
+  end;
+
+end;
+
+procedure TFrm_Cg_Main.act_modExecute(Sender: TObject);
+begin
+  Frm_cgInput := TFrm_cgInput.Create(Application);
+
+  with Frm_cgInput do
+  begin
+    DM_XS.FDQ_cg.Edit;
+    Caption := '修改数据';
+    ShowModal;
+    Free;
+  end;
+end;
+
+procedure TFrm_Cg_Main.ComboBox1Change(Sender: TObject);
+begin
+
+  if ComboBox1.Text = '供应商名称' then
+  begin
+    Edit1.Visible := True;
+    DateTimePicker1.Visible := False;
+    DateTimePicker2.Visible := False;
+    Lab_optin.Caption := '请输入供应商的名称';
+  end
+  else
+  begin
+    Edit1.Visible := False;
+    DateTimePicker1.Visible := True;
+    DateTimePicker2.Visible := True;
+    Lab_optin.Caption := '请选择要查询的时间段';
+  end;
+end;
+
+procedure TFrm_Cg_Main.cxButton1Click(Sender: TObject);
+// const
+// sql_select : string = 'SELECT * FROM cginfo where   cg_date BETWEEN %s and %s  ';
+var
+  mysql, start, starttime, endtime: string;
+begin
+  if ComboBox1.Text = '' then
+  begin
+    Application.MessageBox('请选择要查询的条件！', '友情提醒', MB_OK);
+    Exit;
+  end;
+  start := ischeckbox();
+  if ComboBox1.Text = '供应商名称' then
+  begin
+    if start = '未结帐' then
+    begin
+      mysql := 'select * from cginfo where cg_gys like %s and cg_jiezhangdate is null';
+      mysql := Format(mysql, [Quotedstr('%' + Trim(Edit1.Text) + '%')]);
+    end
+    else if start = '己结帐' then
+    begin
+      mysql := 'select * from cginfo where cg_gys like %s and cg_jiezhangdate is not null';
+      mysql := Format(mysql, [Quotedstr('%' + Trim(Edit1.Text) + '%')]);
+    end
+    else if start = '全部' then
+
+    begin
+      mysql := 'select * from cginfo where cg_gys like %s ';
+      mysql := Format(mysql, [Quotedstr('%' + Trim(Edit1.Text) + '%')]);
+    end;
+
+    mysqlex(mysql);
+
+  end
+  else if ComboBox1.Text = '按日期查询' then
+  begin
+    starttime := FormatDatetime('YYYY/MM/DD ', DateTimePicker1.Date);
+    endtime := FormatDatetime('YYYY/MM/DD ', DateTimePicker2.Date);
+    if start = '未结帐' then
+    begin
+      mysql := 'SELECT * FROM cginfo where   cg_date BETWEEN %s and %s   and cg_jiezhangdate is null';
+      mysql := Format(mysql, [starttime.QuotedString, endtime.QuotedString]);
+    end
+    else if start = '己结帐' then
+    begin
+      mysql := 'SELECT * FROM cginfo where   cg_date BETWEEN %s and %s   and cg_jiezhangdate is not null';
+      mysql := Format(mysql, [starttime.QuotedString, endtime.QuotedString]);
+    end
+    else if start = '全部' then
+
+    begin
+      mysql := 'SELECT * FROM cginfo where   cg_date BETWEEN %s and %s  ';
+      mysql := Format(mysql, [starttime.QuotedString, endtime.QuotedString]);
+    end;
+
+    mysqlex(mysql);
+    // mysql := 'SELECT * FROM cginfo where   cg_date BETWEEN %s and %s  '
+    // starttime := FormatDatetime('YYYY/MM/DD ', DateTimePicker1.Date);
+    // endtime := FormatDatetime('YYYY/MM/DD ', DateTimePicker2.Date);
+    // mysql := Format(sql_select, [starttime.QuotedString, endtime.QuotedString]);
+    // mysqlex(mysql);
+  end
+  else
+  begin
+    Application.MessageBox('请选择要查询的条件！', '友情提醒', MB_OK);
+
+  end;
+
+end;
+
+procedure TFrm_Cg_Main.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  Free;
+
+end;
+
+procedure TFrm_Cg_Main.FormCreate(Sender: TObject);
+var
+  sql: string;
+begin
+  sql := 'SELECT * FROM cginfo WHERE cg_jiezhangdate  is NULL ';
+  mysqlex(sql);
+end;
+
+function TFrm_Cg_Main.ischeckbox: string;
+begin
+  if RadioButton1.Checked = True then
+  begin
+    Result := '未结帐'
+  end
+  else if RadioButton2.Checked = True then
+
+  begin
+    Result := '己结帐'
+  end
+  else
+  begin
+    Result := '全部'
+  end;
+
+end;
+
+function TFrm_Cg_Main.mysqlex(mysql: string): Boolean;
+begin
+  try
+    with DM_XS.FDQ_cg do
+    begin
+      Close;
+      sql.Clear;
+      sql.Text := mysql;
+      Open;
+
+    end;
+    Result := True
+  except
+    on E: Exception do
+      Result := False;
+  end;
+
+end;
+
+end.

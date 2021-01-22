@@ -1,0 +1,277 @@
+unit UFrm_CW;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxStyles, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinTheBezier,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVisualStudio2013Blue,
+  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, cxNavigator,
+  cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData,
+  cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid, cxTextEdit, dxGDIPlusClasses,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Menus, cxButtons, Data.Win.ADODB, dxDateRanges,
+  dxSkinOffice2019Colorful;
+
+type
+  TFrm_CW = class(TForm)
+    Panel1: TPanel;
+    Panel3: TPanel;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1xs_name: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_gs: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_til: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_hddType: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_Moede: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_HddSzie: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_StartTime: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_EndTime: TcxGridDBColumn;
+    cxGrid1DBTableView1xs_money: TcxGridDBColumn;
+    Image1: TImage;
+    Label1: TLabel;
+    DateTimePicker1: TDateTimePicker;
+    Label2: TLabel;
+    DateTimePicker2: TDateTimePicker;
+    GroupBox1: TGroupBox;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioButton3: TRadioButton;
+    RadioButton4: TRadioButton;
+    Edit1: TEdit;
+    cxButton1: TcxButton;
+    StatusBar1: TStatusBar;
+    Label3: TLabel;
+    ADOQuery1: TADOQuery;
+    procedure FormCreate(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
+    procedure RadioButton1Click(Sender: TObject);
+    procedure RadioButton3Click(Sender: TObject);
+    procedure RadioButton4Click(Sender: TObject);
+    procedure cxButton1Click(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+  private
+    { Private declarations }
+    procedure InitSelectItem();
+    procedure sqlEx(sql: string);
+    function sumMery(sql: string): string;
+    function StrTodate(s: string): TDateTime;
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_CW: TFrm_CW;
+
+implementation
+
+uses
+  UDM_XS;
+{$R *.dfm}
+
+{ TFrm_CW }
+
+procedure TFrm_CW.cxButton1Click(Sender: TObject);
+const
+  sql_select: string = 'SELECT * FROM XiaoShouInfo where xs_jiekuanren is not null and  xs_EndTime BETWEEN %s and %s  ';
+var
+  sqlf, starttime, endtime, tmpsql, tmp: string;
+begin
+  if RadioButton2.Checked = True then
+  begin
+    starttime := FormatDatetime('YYYY/MM/DD ', DateTimePicker1.Date);
+    endtime := FormatDatetime('YYYY/MM/DD ', DateTimePicker2.Date);
+    sqlf := Format(sql_select, [starttime.QuotedString, endtime.QuotedString]);
+   // sqlEx(sqlf);
+  end
+  else if RadioButton1.Checked = True then
+  begin
+       //姓名
+//
+    sqlf := 'SELECT * FROM XiaoShouInfo where xs_name =''' + Trim(Edit1.Text) + ''' and xs_jiekuanren is not null ';
+  end
+  else if RadioButton3.Checked = True then
+  begin
+       //公司
+
+    sqlf := 'SELECT * FROM XiaoShouInfo where xs_gs =''' + Trim(Edit1.Text) + ''' and xs_jiekuanren is not null ';
+
+  end
+  else if RadioButton4.Checked = True then
+  begin
+//
+    sqlf := 'SELECT * FROM XiaoShouInfo where xs_til =''' + Trim(Edit1.Text) + ''' and xs_jiekuanren is not null ';
+
+  end;
+
+  sqlEx(sqlf);
+
+end;
+
+procedure TFrm_CW.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+      Self.Free;
+end;
+
+procedure TFrm_CW.FormCreate(Sender: TObject);
+begin
+  //InitSelectItem();
+end;
+
+procedure TFrm_CW.InitSelectItem;
+var
+  t: TDateTime;
+  tmp: string;
+  adoQuery: TADOQuery;
+begin
+  if RadioButton2.Checked = True then  //日期
+  begin
+//    DateTimePicker1.Visible := True;
+//    DateTimePicker2.Visible := True;
+    //tmp := DateToStr(DateTimePicker1.Date);
+ //   tmp := 'select * from XiaoShouInfo where  xs_StartTime >= '  + '''+DateToStr(DateTimePicker1.Date) '''  and xs_StartTime <=' + ''' +DateToStr(DateTimePicker2.Date)''';
+    tmp := 'Select * From XiaoShouInfo where ' + 'xs_StartTime>=' + '''+DateToStr(DateTimePicker1.Date)+''' + ' and xs_StartTime <=' + '''+DateToStr(DateTimePicker2.Date)+''';
+
+  end;
+  if RadioButton1.Checked = True then //姓名
+  begin
+    if Edit1.Text <> '' then
+    begin
+      tmp := 'SELECT * FROM XiaoShouInfo where xs_name = ''' + Trim(Edit1.Text) + '''';
+      sqlEx(tmp);
+
+    end;
+
+  end;
+  if RadioButton3.Checked = True then //公司
+  begin
+    if Edit1.Text <> '' then
+    begin
+      tmp := 'SELECT * FROM XiaoShouInfo where xs_gs = ''' + Trim(Edit1.Text) + '''';
+      sqlEx(tmp);
+
+    end;
+  end;
+  if RadioButton4.Checked = True then  //电话
+  begin
+
+    if Edit1.Text <> '' then
+    begin
+      tmp := 'SELECT * FROM XiaoShouInfo where xs_til = ''' + Trim(Edit1.Text) + '''';
+      sqlEx(tmp);
+
+    end;
+
+  end
+  else
+  begin
+
+  end;
+
+end;
+
+procedure TFrm_CW.RadioButton1Click(Sender: TObject);
+begin
+  Edit1.Visible := True;
+  DateTimePicker1.Visible := False;
+  DateTimePicker2.Visible := False;
+  Label1.Visible := False;
+  Label2.Visible := False;
+  Label3.Visible := True;
+  Label3.Caption := '请输入要查询的姓名！';
+end;
+
+procedure TFrm_CW.RadioButton2Click(Sender: TObject);
+begin
+  DateTimePicker1.Visible := True;
+  DateTimePicker2.Visible := True;
+  Label1.Visible := True;
+  Label2.Visible := True;
+  Edit1.Visible := False;
+end;
+
+procedure TFrm_CW.RadioButton3Click(Sender: TObject);
+begin
+  Edit1.Visible := True;
+  DateTimePicker1.Visible := False;
+  DateTimePicker2.Visible := False;
+  Label1.Visible := False;
+  Label2.Visible := False;
+  Label3.Visible := True;
+  Label3.Caption := '请输入要查询的公司名！';
+end;
+
+procedure TFrm_CW.RadioButton4Click(Sender: TObject);
+begin
+  Edit1.Visible := True;
+  DateTimePicker1.Visible := False;
+  DateTimePicker2.Visible := False;
+  Label1.Visible := False;
+  Label2.Visible := False;
+  Label3.Visible := True;
+  Label3.Caption := '请输入要查询的电话号码！';
+end;
+
+procedure TFrm_CW.sqlEx(sql: string);
+begin
+
+  DM_XS.FDQ_Cw.Close;
+  DM_XS.FDQ_Cw.sql.Clear;
+  DM_XS.FDQ_Cw.sql.Text := sql;
+  DM_XS.FDQ_Cw.Open;
+
+end;
+
+function TFrm_CW.StrTodate(s: string): TDateTime;
+var
+  D: TDateTime;
+begin
+  D := VarToDateTime('05-10-14 04:35PM');
+  //S:=FormatDatetime('YYYY/MM/DD HH:MM:SS',D);
+  Result := D;
+end;
+
+function TFrm_CW.sumMery(sql: string): string;
+begin
+  if Trim(sql) = '' then
+    Exit;
+  try
+
+    try
+
+      DM_XS.FDQ_Cw.Close;
+      DM_XS.FDQ_Cw.Connection := DM_XS.FDConnection1;
+      DM_XS.FDQ_Cw.SQL.Clear;
+      DM_XS.FDQ_Cw.SQL.Add(sql);
+      DM_XS.FDQ_Cw.Open;
+      Result := DM_XS.FDQ_Cw.FieldByName('xs_money').AsString;
+
+    except
+      on E: Exception do
+
+
+    end;
+  finally
+
+  end;
+
+end;
+
+end.
+

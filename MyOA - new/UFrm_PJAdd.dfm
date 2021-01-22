@@ -1,0 +1,183 @@
+object Frm_PJAdd: TFrm_PJAdd
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Frm_PJAdd'
+  ClientHeight = 470
+  ClientWidth = 302
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 302
+    Height = 398
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 314
+    ExplicitHeight = 139
+    object Label1: TLabel
+      Left = 16
+      Top = 27
+      Width = 52
+      Height = 13
+      Caption = #30828#30424#21378#23478':'
+    end
+    object Label2: TLabel
+      Left = 16
+      Top = 73
+      Width = 52
+      Height = 13
+      Caption = #30828#30424#22411#21495':'
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 119
+      Width = 52
+      Height = 13
+      Caption = #30828#30424#24207#21495':'
+    end
+    object Label4: TLabel
+      Left = 16
+      Top = 165
+      Width = 52
+      Height = 13
+      Caption = #30828#30424#23481#37327':'
+    end
+    object Label5: TLabel
+      Left = 16
+      Top = 211
+      Width = 52
+      Height = 13
+      Caption = #22266#20214#29256#26412':'
+    end
+    object Label7: TLabel
+      Left = 16
+      Top = 303
+      Width = 40
+      Height = 13
+      Caption = #30913#22836#25968':'
+    end
+    object Label6: TLabel
+      Left = 16
+      Top = 257
+      Width = 52
+      Height = 13
+      Caption = #20986#21378#26085#26399':'
+    end
+    object Label8: TLabel
+      Left = 16
+      Top = 343
+      Width = 52
+      Height = 13
+      Caption = #30005#36335#26495#21495':'
+    end
+    object DBEdit2: TDBEdit
+      Left = 74
+      Top = 70
+      Width = 207
+      Height = 21
+      DataField = 'Pj_Mode'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 0
+    end
+    object DBEdit3: TDBEdit
+      Left = 74
+      Top = 116
+      Width = 207
+      Height = 21
+      DataField = 'Pj_Sn'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 1
+    end
+    object DBEdit4: TDBEdit
+      Left = 74
+      Top = 162
+      Width = 207
+      Height = 21
+      DataField = 'Pj_size'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 2
+    end
+    object DBEdit5: TDBEdit
+      Left = 74
+      Top = 208
+      Width = 207
+      Height = 21
+      DataField = 'Pj_Fw'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 3
+    end
+    object DBEdit7: TDBEdit
+      Left = 74
+      Top = 300
+      Width = 207
+      Height = 21
+      DataField = 'Pj_HeadNo'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 4
+    end
+    object DBEdit6: TDBEdit
+      Left = 74
+      Top = 254
+      Width = 207
+      Height = 21
+      DataField = 'Pj_Data'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 5
+    end
+    object DBEdit8: TDBEdit
+      Left = 74
+      Top = 340
+      Width = 207
+      Height = 21
+      DataField = 'Pj_dianBanNo'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 6
+    end
+    object DBComboBox1: TDBComboBox
+      Left = 74
+      Top = 24
+      Width = 207
+      Height = 21
+      DataField = 'Pj_Type'
+      DataSource = DM_XS.DataSource_PJ
+      TabOrder = 7
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 398
+    Width = 302
+    Height = 72
+    Align = alBottom
+    TabOrder = 1
+    object cxButton1: TcxButton
+      Left = 56
+      Top = 24
+      Width = 75
+      Height = 25
+      Caption = #25552#20132
+      TabOrder = 0
+      OnClick = cxButton1Click
+    end
+    object cxButton2: TcxButton
+      Left = 160
+      Top = 24
+      Width = 75
+      Height = 25
+      Caption = #21462#28040
+      TabOrder = 1
+      OnClick = cxButton2Click
+    end
+  end
+end
