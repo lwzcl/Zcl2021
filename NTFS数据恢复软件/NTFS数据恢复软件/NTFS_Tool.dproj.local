@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899-12-30 00:00:00.000.bdsproj,F:\编程资源整理\磁盘文件恢复\NTFS_Tool.bdsproj=C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Project1.bdsproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uNTFS.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.pas,F:\编程资源整理\磁盘文件恢复\uMain.pas=C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.dfm,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.dfm=F:\编程资源整理\磁盘文件恢复\uMain.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.pas,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.pas=F:\编程资源整理\磁盘文件恢复\uMain.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.bdsproj,C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Project1.bdsproj=F:\编程资源整理\磁盘文件恢复\NTFS_Tool.bdsproj</Transaction>
     <Transaction>1899-12-30 00:00:00.000.pas,F:\编程资源整理\磁盘文件恢复\FileDetails.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uNTFS.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uScanThread.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uRecoverThread.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.dfm,F:\编程资源整理\磁盘文件恢复\FileDetails.dfm=</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uScanThread.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.pas,F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\uRecoverThread.pas=F:\我的百宝箱\资料代码分类\存储设备\磁盘文件恢复\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.dfm,F:\编程资源整理\磁盘文件恢复\uMain.dfm=C:\Documents and Settings\houbn789\My Documents\Borland Studio Projects\Unit1.dfm</Transaction>
   </Transactions>
 </BorlandProject>

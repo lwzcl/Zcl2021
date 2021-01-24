@@ -111,11 +111,7 @@ begin
   with PBootSequence^ do
   begin
     //result := cOEMID[1]+cOEMID[2]+cOEMID[3]+cOEMID[4];
-    if (cOEMID[1]=$46 ) and (cOEMID[2]=$49)and (cOEMID[3]=$4C)and (cOEMID[4]=$45)then
-    begin
-       Result := 'NTFS';
-    end;
-
+    Result := 'NTFS';
     Dispose(PBootSequence);
     Closehandle(hDevice);
   end;
